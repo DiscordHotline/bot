@@ -1,10 +1,9 @@
-import {Member, User} from "eris";
-import {inject, injectable} from "inversify";
-import {Connection} from "typeorm";
-import {LoggerInstance} from "winston";
-import Configuration from "../Configuration/Configuration";
-import Permission, {PermissionType} from "../Entity/Permission";
-import TYPES from "../types";
+import {Member, User} from 'eris';
+import {inject, injectable} from 'inversify';
+import {Connection} from 'typeorm';
+import {Logger as LoggerInstance} from 'winston';
+import Permission, {PermissionType} from '../Entity/Permission';
+import TYPES from '../types';
 
 enum Allowed {
     No      = -1,
@@ -15,16 +14,16 @@ enum Allowed {
 @injectable()
 export default class Authorizer {
     private static DoesPermissionMatch(permission: string, node: string, strict: boolean): boolean {
-        return (!strict && node.indexOf("*") >= 0 && Authorizer.IsWildcardMatch(permission, node))
+        return (!strict && node.indexOf('*') >= 0 && Authorizer.IsWildcardMatch(permission, node))
                || node === permission;
     }
 
     private static IsWildcardMatch(permission: string, node: string): boolean {
-        const permArray: string[] = permission.split(".");
-        const nodeArray: string[] = node.split(".");
+        const permArray: string[] = permission.split('.');
+        const nodeArray: string[] = node.split('.');
 
         for (let i = 0; i < nodeArray.length; i++) {
-            if (nodeArray[i] === permArray[i] || nodeArray[i] === "*") {
+            if (nodeArray[i] === permArray[i] || nodeArray[i] === '*') {
                 continue;
             }
 
@@ -35,23 +34,20 @@ export default class Authorizer {
     }
 
     @inject(TYPES.Connection)
-    private _database: Connection;
-    @inject(TYPES.Configuration)
-    private _configuration: Configuration;
-    @inject(TYPES.Logger)
-    private _logger: LoggerInstance;
+    private database: Connection;
 
-    private readonly _backdoor: String[] = ["108432868149035008", "108633439984439296", "108598078981804032"];
-    private _permissions: Permission[]   = [];
-    private _owner: String;
+    @inject(TYPES.Logger)
+    private logger: LoggerInstance;
+
+    // Aaron and Pepe
+    private readonly backdoor: String[] = ['108432868149035008', '97774439319486464'];
+    private permissions: Permission[]   = [];
 
     public async Initialize(): Promise<void> {
-        this._owner = this._configuration.GetGlobal("owner");
-
         try {
-            this._permissions = await this._database.getRepository(Permission).find();
+            this.permissions = await this.database.getRepository(Permission).find();
         } catch (error) {
-            this._logger.error("Failed fetching permissions: ", error);
+            this.logger.error('Failed fetching permissions: ', error);
         }
     }
 
@@ -63,11 +59,7 @@ export default class Authorizer {
             return false;
         }
 
-        if (this._backdoor.indexOf(member.id) >= 0) {
-            return true;
-        }
-
-        if (this._owner === member.id) {
+        if (this.backdoor.indexOf(member.id) >= 0) {
             return true;
         }
 
@@ -97,7 +89,7 @@ export default class Authorizer {
     }
 
     private IsRoleAllowed(permission: string, roleId: string, strict: boolean): Allowed {
-        const perms: ReadonlyArray<Permission> = this._permissions.filter(
+        const perms: ReadonlyArray<Permission> = this.permissions.filter(
             (x) => x.Type === PermissionType.Role && x.TypeId === roleId,
         );
 
@@ -113,12 +105,12 @@ export default class Authorizer {
     private IsUserAllowed(permission: string, member: Member | User, strict: boolean): Allowed {
         let perms: ReadonlyArray<Permission>;
         if (member instanceof Member) {
-            perms = this._permissions.filter(
+            perms = this.permissions.filter(
                 (x) => x.Type === PermissionType.User
                        && x.TypeId === member.id && x.GuildId === member.guild.id,
             );
         } else {
-            perms = this._permissions.filter(
+            perms = this.permissions.filter(
                 (x) => x.Type === PermissionType.User
                        && x.TypeId === member.id && !x.GuildId,
             );
@@ -136,4 +128,4 @@ export default class Authorizer {
 
         return Allowed.Unknown;
     }
-};
+}

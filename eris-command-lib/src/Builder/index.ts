@@ -1,7 +1,8 @@
-import ChannelBuffer from './ChannelBuffer';
-import MessageBuffer from './MessageBuffer';
+import EmbedBuilder from './EmbedBuilder';
+import StringBuilder from './StringBuilder';
 
-export const Buffer = {
-    ChannelBuffer,
-    MessageBuffer,
+export default {
+    EmbedBuilder,
+    StringBuilder,
 };
+

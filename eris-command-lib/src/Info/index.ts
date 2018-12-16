@@ -1,5 +1,7 @@
-import Permission from './Permission';
+import CommandInfo from './CommandInfo';
+import ParameterInfo from './ParameterInfo';
 
-export const Entity = {
-    Permission,
+export default {
+    CommandInfo,
+    ParameterInfo,
 };

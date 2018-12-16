@@ -1,10 +1,11 @@
 import {Client} from 'eris';
+import {types as CFTypes} from 'eris-command-framework';
 import {Container, inject, injectable} from 'inversify';
 import * as requireContext from 'require-context';
 import * as vm from 'vm';
 import {Logger as LoggerInterface} from 'winston';
 
-import TYPES from '../../../types';
+import TYPES from '../../../src/types';
 import IEvaluationResult from './IEvaluationResult';
 
 const req = requireContext(__dirname, true);
@@ -29,7 +30,8 @@ run.apply(this)`;
 
     @inject('Container')
     private _container: Container;
-    @inject(TYPES.Logger)
+
+    @inject(CFTypes.Logger)
     private _logger: LoggerInterface;
 
     public async Evaluate(code: string, customContext: any = {}): Promise<IEvaluationResult> {
@@ -66,7 +68,7 @@ run.apply(this)`;
         return {
             require: req,
             container: this._container,
-            client: this._container.get<Client>(TYPES.DiscordClient),
+            client: this._container.get<Client>(CFTypes.DiscordClient),
             TYPES,
         };
     }

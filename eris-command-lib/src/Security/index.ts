@@ -1,5 +1,5 @@
-import Permission from './Permission';
+import Authorizer from './Authorizer';
 
-export const Entity = {
-    Permission,
+export default {
+    Authorizer,
 };

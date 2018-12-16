@@ -1,7 +1,5 @@
-import EmbedBuilder from './EmbedBuilder';
-import StringBuilder from './StringBuilder';
+import Permission from './Permission';
 
-export const Builder = {
-    EmbedBuilder,
-    StringBuilder,
+export default {
+    Permission,
 };

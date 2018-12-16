@@ -1,7 +1,21 @@
-import CommandInfo from './CommandInfo';
-import ParameterInfo from './ParameterInfo';
+import DurationParam from './DurationParam';
+import Embed from './Embed';
+import EmbedAuthor from './EmbedAuthor';
+import EmbedField from './EmbedField';
+import EmbedFooter from './EmbedFooter';
+import EmbedImage from './EmbedImage';
+import EmbedProvider from './EmbedProvider';
+import EmbedThumbnail from './EmbedThumbnail';
+import EmbedVideo from './EmbedVideo';
 
-export const Info = {
-    CommandInfo,
-    ParameterInfo,
+export default {
+    DurationParam,
+    Embed,
+    EmbedAuthor,
+    EmbedField,
+    EmbedFooter,
+    EmbedImage,
+    EmbedProvider,
+    EmbedThumbnail,
+    EmbedVideo,
 };

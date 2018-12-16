@@ -1,21 +1,23 @@
-import DurationParam from './DurationParam';
-import Embed from './Embed';
-import EmbedAuthor from './EmbedAuthor';
-import EmbedField from './EmbedField';
-import EmbedFooter from './EmbedFooter';
-import EmbedImage from './EmbedImage';
-import EmbedProvider from './EmbedProvider';
-import EmbedThumbnail from './EmbedThumbnail';
-import EmbedVideo from './EmbedVideo';
+import AbstractTypeReader from './AbstractTypeReader';
+import ArrayTypeReader from './ArrayTypeReader';
+import ChannelTypeReader from './ChannelTypeReader';
+import DateTypeReader from './DateTypeReader';
+import DurationTypeReader from './DurationTypeReader';
+import EnumTypeReader from './EnumTypeReader';
+import MemberTypeReader from './MemberTypeReader';
+import PrimitiveTypeReader from './PrimitiveTypeReader';
+import RoleTypeReader from './RoleTypeReader';
+import UserTypeReader from './UserTypeReader';
 
-export const Model = {
-    DurationParam,
-    Embed,
-    EmbedAuthor,
-    EmbedField,
-    EmbedFooter,
-    EmbedImage,
-    EmbedProvider,
-    EmbedThumbnail,
-    EmbedVideo,
+export default {
+    AbstractTypeReader,
+    ArrayTypeReader,
+    ChannelTypeReader,
+    DateTypeReader,
+    DurationTypeReader,
+    EnumTypeReader,
+    MemberTypeReader,
+    PrimitiveTypeReader,
+    RoleTypeReader,
+    UserTypeReader,
 };
