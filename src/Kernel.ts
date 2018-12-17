@@ -38,6 +38,8 @@ export default class Kernel {
     }
 
     private async initializeContainer(): Promise<void> {
+        this.container.bind<Container>('Container').toConstantValue(this.container);
+
         const commandFramework = new CommandFramework(
             this.container,
             {prefix: '|', onMessageUpdate: true},
@@ -71,12 +73,13 @@ export default class Kernel {
                 ctx.container.get<ClientOptions>(TYPES.discord.options),
             );
         });
+        this.container.bind<Client>(CFTypes.DiscordClient).toService(TYPES.discord.client);
 
         await commandFramework.Initialize();
     }
 
     private async findPlugins(): Promise<{[name: string]: PluginInterface}> {
-        const plugins = {};
+        const plugins: { [name: string]: PluginInterface } = {};
         const packagePlugins = require('../package.json').plugins;
         for (const name of Object.keys(packagePlugins)) {
             let pkg: string = packagePlugins[name];
@@ -84,7 +87,7 @@ export default class Kernel {
                 pkg = resolve(__dirname, '..', pkg);
             }
 
-            plugins[name] = (await import(pkg)).default;
+            // plugins[name] = (await import(pkg)).default;
         }
 
         return plugins;
