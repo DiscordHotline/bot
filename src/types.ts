@@ -1,6 +1,7 @@
-const TYPES = {
+const Types = {
     vault:    {
         client: Symbol('vault.client'),
+        config: Symbol('vault.config'),
     },
     database: Symbol('database'),
     discord:  {
@@ -8,6 +9,7 @@ const TYPES = {
         options: Symbol('discord.options'),
         client:  Symbol('discord.client'),
     },
+    logger:   Symbol('logger'),
 };
 
-export default TYPES;
+export default Types;

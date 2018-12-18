@@ -1,0 +1,13 @@
+{
+    "secret/hotline/database": {
+        "host": "mysql://mysql:3306"
+    },
+    "secret/hotline/bot/database": {
+        "name":     "bot",
+        "user":     "bot",
+        "password": "bot"
+    },
+    "secret/hotline/discord": {
+        "token": "REPLACE_ME_WITH_A_TOKEN"
+    }
+}
