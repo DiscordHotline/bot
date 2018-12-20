@@ -1,6 +1,6 @@
 {
     "secret/hotline/database":     {
-        "host": "mysql"
+        "host": "localhost"
     },
     "secret/hotline/bot/database": {
         "name":     "bot",
@@ -8,6 +8,6 @@
         "password": "bot"
     },
     "secret/hotline/discord":      {
-        "token": "MzA1MTQwMjc4NDgwODYzMjMz.DvON1A.jfv2wvRz8PvZNsgbcSRZHvjzRac"
+        "token": "MzA1MTQwMjc4NDgwODYzMjMz.Dvzwbg.NEcGcv1caB4SEhmxj5Fs2t88Kuk"
     }
 }

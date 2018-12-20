@@ -1,6 +1,6 @@
 {
     "secret/hotline/database": {
-        "host": "mysql://mysql:3306"
+        "host": "mysql"
     },
     "secret/hotline/bot/database": {
         "name":     "bot",

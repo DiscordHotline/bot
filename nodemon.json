@@ -5,6 +5,7 @@
         "src/**/*.ts",
         "package.json",
         "dev.vault.json",
+        "node_modules/eris-command-lib",
         ".env"
     ],
     "ext":   "ts js json"
