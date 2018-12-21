@@ -1,5 +1,5 @@
 import {Client, ClientOptions} from 'eris';
-import {CommandFramework, Interfaces, types as CFTypes} from 'eris-command-framework';
+import {AbstractPlugin, CommandFramework, types as CFTypes} from 'eris-command-framework';
 import {Container} from 'inversify';
 import {resolve} from 'path';
 import {Connection, createConnection} from 'typeorm';
@@ -8,7 +8,6 @@ import {createLogger, format, Logger, transports} from 'winston';
 import Types from './types';
 import Config from './Vault/Config';
 import Vault from './Vault/Vault';
-import PluginInterface = Interfaces.PluginInterface;
 
 export default class Kernel {
     public readonly container: Container = new Container({defaultScope: 'Singleton'});
@@ -104,8 +103,8 @@ export default class Kernel {
         await commandFramework.initialize();
     }
 
-    private async findPlugins(): Promise<{ [name: string]: PluginInterface }> {
-        const plugins: { [name: string]: PluginInterface } = {};
+    private async findPlugins(): Promise<{ [name: string]: typeof AbstractPlugin }> {
+        const plugins: { [name: string]: typeof AbstractPlugin } = {};
 
         const pkgJson        = require('../package.json');
         const packagePlugins = pkgJson.plugins;
@@ -125,10 +124,10 @@ export default class Kernel {
                 info = require(resolve(pkg, '..', 'package.json'));
             }
 
-            (plugins[name] as any).name = info.pluginTitle || info.name;
+            plugins[name].Name = info.pluginTitle || info.name;
 
             // @todo Validate config
-            (plugins[name] as any).Config = packageConfigs[name] || {};
+            plugins[name].Config = packageConfigs[name] || {};
         }
 
         return plugins;
