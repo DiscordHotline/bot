@@ -113,10 +113,11 @@ export default class Kernel {
                 pkg = resolve(__dirname, '..', pkg);
             }
 
+            this.logger.info('Loading Plugin: %s - %s', name, pkg);
             plugins[name] = (await import(pkg)).default;
             let info;
             try {
-                info = require(resolve(pkg, 'package.json'));
+                info = require(pkg + '/package.json');
             } catch (e) {
                 info = require(resolve(pkg, '..', 'package.json'));
             }
