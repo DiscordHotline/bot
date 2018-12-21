@@ -33,7 +33,7 @@ export default class Kernel {
     }
 
     public async run(): Promise<void> {
-        this.logger.info('Booting Kernel. Environment: %s, Debug: %s', this.environment, this.debug);
+        this.logger.info('Booting Kernel. environment: %s, Debug: %s', this.environment, this.debug);
 
         await this.boot();
     }
@@ -47,9 +47,9 @@ export default class Kernel {
     private async initializeContainer(): Promise<void> {
         this.container.bind<Container>('Container').toConstantValue(this.container);
 
-        // Logger
+        // logger
         this.container.bind<Logger>(Types.logger).toConstantValue(this.logger);
-        this.container.bind<Logger>(CFTypes.Logger).toService(Types.logger);
+        this.container.bind<Logger>(CFTypes.logger).toService(Types.logger);
 
         // Vault
         this.container.bind<Config>(Types.vault.config).toConstantValue({
@@ -63,14 +63,14 @@ export default class Kernel {
         const vault: Vault = this.container.get<Vault>(Types.vault.client);
         await vault.initialize();
 
-        // Command Framework
+        // command Framework
         const commandFramework = new CommandFramework(
             this.container,
             {prefix: '|', onMessageUpdate: true},
             await this.findPlugins(),
         );
 
-        // Database/TypeORM
+        // database/TypeORM
         const connection = await createConnection({
             synchronize:       true,
             host:              await vault.getSecret('database', 'host'),
@@ -82,13 +82,13 @@ export default class Kernel {
             supportBigNumbers: true,
             bigNumberStrings:  true,
             entities:          [
-                ...commandFramework.GetEntities(),
+                ...commandFramework.getEntities(),
             ],
         });
         this.container.bind<Connection>(Types.database).toConstantValue(connection);
-        this.container.bind<Connection>(CFTypes.Connection).toConstantValue(connection);
+        this.container.bind<Connection>(CFTypes.connection).toConstantValue(connection);
 
-        // Discord Client
+        // Discord client
         this.container.bind<string>(Types.discord.token)
             .toConstantValue(await vault.getSecret('discord', 'token'));
         this.container.bind<ClientOptions>(Types.discord.options).toConstantValue({});
@@ -98,22 +98,25 @@ export default class Kernel {
                 ctx.container.get<ClientOptions>(Types.discord.options),
             );
         });
-        this.container.bind<Client>(CFTypes.DiscordClient).toService(Types.discord.client);
+        this.container.bind<Client>(CFTypes.discordClient).toService(Types.discord.client);
 
-        // Initialize Command Framework
-        await commandFramework.Initialize();
+        // initialize command Framework
+        await commandFramework.initialize();
     }
 
     private async findPlugins(): Promise<{ [name: string]: PluginInterface }> {
         const plugins: { [name: string]: PluginInterface } = {};
-        const packagePlugins                               = require('../package.json').plugins;
+
+        const pkgJson        = require('../package.json');
+        const packagePlugins = pkgJson.plugins;
+        const packageConfigs = pkgJson.pluginConfigs;
         for (const name of Object.keys(packagePlugins)) {
             let pkg: string = packagePlugins[name];
             if (pkg.indexOf('.') === 0) {
                 pkg = resolve(__dirname, '..', pkg);
             }
 
-            this.logger.info('Loading Plugin: %s - %s', name, pkg);
+            this.logger.info('Loading plugin: %s - %s', name, pkg);
             plugins[name] = (await import(pkg)).default;
             let info;
             try {
@@ -122,23 +125,26 @@ export default class Kernel {
                 info = require(resolve(pkg, '..', 'package.json'));
             }
 
-            (plugins[name] as any).Name = info.pluginTitle || info.name;
+            (plugins[name] as any).name = info.pluginTitle || info.name;
+
+            // @todo Validate config
+            (plugins[name] as any).Config = packageConfigs[name] || {};
         }
 
         return plugins;
     }
 
     private async initializeDiscordClient(client: Client): Promise<void> {
-        this.logger.info('Initializing Discord Client');
+        this.logger.info('Initializing Discord client');
 
         client.on('ready', async () => {
-            this.logger.info('Discord Client is ready');
+            this.logger.info('Discord client is ready');
         });
 
         client.on('debug', this.logger.debug.bind(this.debug));
-        client.on('error', (err) => this.logger.error('Error from Discord Client: %s', err));
+        client.on('error', (err) => this.logger.error('error from Discord client: %s', err));
 
         await client.connect();
-        this.logger.info('Discord Client is connecting');
+        this.logger.info('Discord client is connecting');
     }
 }

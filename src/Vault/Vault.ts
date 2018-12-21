@@ -45,7 +45,7 @@ export default class Vault {
             return (await this.getSecrets(path, cache, withPrefix, ttl))[field];
         } catch (e) {
             this.logger.error(
-                'Failed fetching secret %s from path %s. Original Error: %s\n%s',
+                'Failed fetching secret %s from path %s. Original error: %s\n%s',
                 field,
                 withPrefix ? 'secret/hotline/' + path : path,
                 e.message,
@@ -66,7 +66,7 @@ export default class Vault {
             return await this.getPath(withPrefix ? 'secret/hotline/' + path : path, cache, ttl);
         } catch (e) {
             this.logger.error(
-                'Failed fetching secret path %s. Original Error: %s\n%s',
+                'Failed fetching secret path %s. Original error: %s\n%s',
                 withPrefix ? 'secret/hotline/' + path : path,
                 e.message,
                 e.stack,

@@ -25,7 +25,7 @@
         "@hotline/core-plugin": "^1.0.4",
         "dotenv": "^6.2.0",
         "eris": "^0.9.0",
-        "eris-command-framework": "^1.1.35",
+        "eris-command-framework": "^2.0",
         "inversify": "^5.0.1",
         "linqts": "^1.12.2",
         "mysql": "^2.16.0",
@@ -36,6 +36,10 @@
         "winston": "^3.1.0"
     },
     "plugins": {
-        "CorePlugin": "@hotline/core-plugin"
+        "CorePlugin": "@hotline/core-plugin",
+        "ApplicationPlugin": "./plugins/ApplicationPlugin/src"
+    },
+    "pluginConfigs": {
+        "ApplicationPlugin": {}
     }
 }
