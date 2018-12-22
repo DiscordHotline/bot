@@ -14,13 +14,21 @@ jobs:
             -   run: <command>
     lint:
         docker:
-            - image: circleci/nodejs:10
+            -   image: circleci/nodejs:10
         steps:
             - checkout
-            - run: npm run lint
+            -   run: npm run lint
 
 workflows:
     version: 2
     lint:
         jobs:
             - lint
+    build_and_deploy:
+        jobs:
+            - build
+            -   deploy:
+                    filters:
+                        branches:
+                            only:
+                                - master
