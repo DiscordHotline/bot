@@ -9,6 +9,8 @@ ENV NODE_ENV=$ENIRONMENT
 CMD npm run $SCRIPT
 WORKDIR /app
 
-COPY . /app/
+COPY package.json package-lock.json /app/
+RUN if [[ "$ENVIRONMENT" = "prod" ]]; then npm install; fi
 
-RUN if [[ "$ENVIRONMENT" = "prod" ]]; then npm i && npm run build; fi
+COPY . /app/
+RUN if [[ "$ENVIRONMENT" = "prod" ]]; then npm run build; fi
