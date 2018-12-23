@@ -1,0 +1,33 @@
+stages:
+    - lint
+    - build
+    - deploy
+
+lint:
+  stage: lint
+  image: node:10
+  script:
+    - npm i
+    - npm run lint
+
+build:
+  stage: build
+  image: docker:17.03
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD"
+  script:
+    - docker build --pull -t "$CI_REGISTRY_IMAGE" --build-arg SCRIPT=start --build-arg ENVIRONMENT=prod .
+    - docker push "$CI_REGISTRY_IMAGE"
+  only:
+    - master
+
+
+deploy:
+  stage: deploy
+  image: cdrx/rancher-gitlab-deploy
+  script:
+    - upgrade --environment production --stack hotline --service bot
+  only:
+    - master
