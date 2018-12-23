@@ -124,10 +124,10 @@ export default class Kernel {
             this.logger.info('Loading plugin: %s - %s - Local: %s', name, pkg, local ? 'yes' : 'no');
             plugins[name] = (await import(pkg)).default;
             this.logger.info('Attempting to load package.json: %s', resolve(pkg, 'package.json'));
-            const info    = require(
-                existsSync(resolve(pkg, 'package.json'))
-                ? resolve(pkg, 'package.json')
-                : resolve(pkg, '..', 'package.json'),
+            const info = require(
+                local
+                ? resolve(pkg, '..', 'package.json')
+                : pkg + '/package.json',
             );
 
             plugins[name].Name = info.pluginTitle || info.name;
