@@ -6,7 +6,7 @@ ARG ENVIRONMENT=dev
 ENV SCRIPT=$SCRIPT
 ENV NODE_ENV=$ENIRONMENT
 
-CMD ["npm", "run", "$SCRIPT"]
+CMD ["npm", "run", "${SCRIPT}"]
 WORKDIR /app
 
 COPY . /app/
