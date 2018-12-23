@@ -1,5 +1,6 @@
 import {Client, ClientOptions} from 'eris';
 import {AbstractPlugin, CommandFramework, types as CFTypes} from 'eris-command-framework';
+import {existsSync} from 'fs';
 import {Container} from 'inversify';
 import {resolve} from 'path';
 import {Connection, createConnection} from 'typeorm';
@@ -113,18 +114,20 @@ export default class Kernel {
         const packageConfigs = pkgJson.pluginConfigs;
         for (const name of Object.keys(packagePlugins)) {
             let pkg: string = packagePlugins[name];
-            if (pkg.indexOf('.') === 0) {
-                pkg = resolve(__dirname, '..', pkg);
+            const localPath = resolve(__dirname, '..', 'plugins', ...pkg.split('/'));
+            let local       = false;
+            if (existsSync(localPath)) {
+                pkg   = resolve(localPath, 'src');
+                local = true;
             }
 
-            this.logger.info('Loading plugin: %s - %s', name, pkg);
+            this.logger.info('Loading plugin: %s - %s - Local: %s', name, pkg, local ? 'yes' : 'no');
             plugins[name] = (await import(pkg)).default;
-            let info;
-            try {
-                info = require(pkg + '/package.json');
-            } catch (e) {
-                info = require(resolve(pkg, '..', 'package.json'));
-            }
+            const info    = require(
+                existsSync(resolve(pkg, 'package.json'))
+                ? resolve(pkg, 'package.json')
+                : resolve(pkg, '..', 'package.json'),
+            );
 
             plugins[name].Name = info.pluginTitle || info.name;
 
