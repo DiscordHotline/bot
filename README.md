@@ -1,4 +1,4 @@
-# Discord Hotline Bot
+# Discord Hotline Bot [![pipeline status](https://gitlab.com/discordhotline/bot/badges/master/pipeline.svg)](https://gitlab.com/discordhotline/bot/commits/master)
 
 # Getting started
 
