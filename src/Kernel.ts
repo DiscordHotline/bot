@@ -68,7 +68,7 @@ export default class Kernel {
         // command Framework
         const commandFramework = new CommandFramework(
             this.container,
-            {prefix: '|', onMessageUpdate: true},
+            {prefix: process.env.PREFIX || '>', onMessageUpdate: true},
             await this.findPlugins(),
         );
 
