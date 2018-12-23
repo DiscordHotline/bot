@@ -45,6 +45,8 @@ export default class Kernel {
 
     private async initializeContainer(): Promise<void> {
         this.container.bind<Container>('Container').toConstantValue(this.container);
+        this.container.bind<any>('Types').toConstantValue(Types);
+        this.container.bind<any>('CFTypes').toConstantValue(CFTypes);
 
         // logger
         this.container.bind<Logger>(Types.logger).toConstantValue(this.logger);
