@@ -18,6 +18,8 @@ export default class Kernel {
 
     private readonly logger: Logger;
 
+    private vault: Vault;
+
     // tslint:disable-next-line:no-shadowed-variable
     constructor(private readonly environment: string, private readonly debug: boolean) {
         this.logger = createLogger({
@@ -70,8 +72,8 @@ export default class Kernel {
             secretId:  process.env.VAULT_SECRET_ID,
         });
         this.container.bind<Vault>(Types.vault.client).to(Vault);
-        const vault: Vault = this.container.get<Vault>(Types.vault.client);
-        await vault.initialize();
+        this.vault = this.container.get<Vault>(Types.vault.client);
+        await this.vault.initialize();
 
         // command Framework
         const commandFramework = new CommandFramework(
@@ -84,11 +86,11 @@ export default class Kernel {
         // database/TypeORM
         const connection = await createConnection({
             synchronize:       true,
-            host:              await vault.getSecret('database', 'host'),
-            database:          await vault.getSecret('bot/database', 'name'),
+            host:              await this.vault.getSecret('database', 'host'),
+            database:          await this.vault.getSecret('bot/database', 'name'),
             port:              3306,
-            username:          await vault.getSecret('bot/database', 'user'),
-            password:          await vault.getSecret('bot/database', 'password'),
+            username:          await this.vault.getSecret('bot/database', 'user'),
+            password:          await this.vault.getSecret('bot/database', 'password'),
             type:              'mysql',
             supportBigNumbers: true,
             bigNumberStrings:  true,
@@ -101,7 +103,7 @@ export default class Kernel {
 
         // Discord client
         this.container.bind<string>(Types.discord.token)
-            .toConstantValue(await vault.getSecret('discord', 'token'));
+            .toConstantValue(await this.vault.getSecret('discord', 'token'));
         this.container.bind<ClientOptions>(Types.discord.options).toConstantValue({});
         this.container.bind<Client>(Types.discord.client).toDynamicValue((ctx) => {
             return new Client(
@@ -173,7 +175,7 @@ export default class Kernel {
             this.logger.info('Discord client is ready');
             if (process.env.ENVIRONMENT !== 'dev') {
                 // tslint:disable-next-line
-                new hookcord.Hook().setOptions({link: 'https://canary.discordapp.com/api/webhooks/528139579195260928/a1vrEyfM-xK30_l8h7ZZGYf1Hb9cjs1kUsUl4BFA2S9n2GBDEpnwpyBQra2k7BW43uHS'})
+                new hookcord.Hook().setOptions({link: await this.vault.getSecret('bot', 'webhook')})
                     .setPayload({content: 'Bot is ready'})
                     .fire()
                     .catch(console.error);
