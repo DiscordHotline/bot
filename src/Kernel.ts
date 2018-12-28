@@ -114,6 +114,7 @@ export default class Kernel {
             app.use(require('morgan')('dev'))
                .use(require('compression')())
                .use(require('body-parser').json());
+            app.get('/', (_, res) => res.json({status: 'ok'}));
 
             return app;
         });
