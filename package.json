@@ -60,7 +60,6 @@
         },
         "ReportPlugin": {
             "hotlineGuildId": "204100839806205953",
-            "apiUrl": "http://localhost:3000/",
             "reportChannel": "522895713705918475",
             "subscriptions": [
                 "528121982080778240",
