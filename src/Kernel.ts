@@ -113,8 +113,8 @@ export default class Kernel {
             const app = express();
             app.use(require('morgan')('dev'))
                .use(require('compression')())
-               .use(require('body-parser').json());
-            app.get('/', (_, res) => res.json({status: 'ok'}));
+               .use(require('body-parser').json())
+               .get('/', (_, res) => res.json({status: 'ok'}));
 
             return app;
         });
