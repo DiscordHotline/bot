@@ -152,8 +152,9 @@ export default class Kernel {
             } catch (_ignored) {
             }
             this.logger.info(
-                'Loading plugin: %s - %s - Local: %s - Types: %s',
+                'Loading plugin: %s%s - %s - Local: %s - Types: %s',
                 name,
+                local ? '' : ` v${info.version}`,
                 pkg,
                 local ? 'yes' : 'no',
                 types ? 'yes' : 'no',
