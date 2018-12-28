@@ -3,6 +3,7 @@ import {AbstractPlugin, CommandFramework, types as CFTypes} from 'eris-command-f
 import * as express from 'express';
 import {Express} from 'express';
 import {existsSync} from 'fs';
+import * as hookcord from 'hookcord';
 import {Container} from 'inversify';
 import {resolve} from 'path';
 import {Connection, createConnection} from 'typeorm';
@@ -170,6 +171,13 @@ export default class Kernel {
 
         client.on('ready', async () => {
             this.logger.info('Discord client is ready');
+            if (process.env.ENVIRONMENT !== 'dev') {
+                // tslint:disable-next-line
+                new hookcord.Hook().setOptions({link: 'https://canary.discordapp.com/api/webhooks/528139579195260928/a1vrEyfM-xK30_l8h7ZZGYf1Hb9cjs1kUsUl4BFA2S9n2GBDEpnwpyBQra2k7BW43uHS'})
+                    .setPayload({content: 'Bot is ready'})
+                    .fire()
+                    .catch(console.error);
+            }
         });
 
         client.on('debug', this.logger.debug.bind(this.debug));
