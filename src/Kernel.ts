@@ -1,5 +1,7 @@
 import {Client, ClientOptions} from 'eris';
 import {AbstractPlugin, CommandFramework, types as CFTypes} from 'eris-command-framework';
+import * as express from 'express';
+import {Express} from 'express';
 import {existsSync} from 'fs';
 import {Container} from 'inversify';
 import {resolve} from 'path';
@@ -42,6 +44,11 @@ export default class Kernel {
         await this.initializeContainer();
 
         await this.initializeDiscordClient(this.container.get<Client>(Types.discord.client));
+        this.container.get<Express>(Types.webserver)
+            .listen(
+                process.env.PORT || 3000,
+                () => this.logger.info('Webserver listening on port ' + (process.env.PORT || 3000)),
+            );
     }
 
     private async initializeContainer(): Promise<void> {
@@ -68,6 +75,7 @@ export default class Kernel {
         // command Framework
         const commandFramework = new CommandFramework(
             this.container,
+            Types,
             {prefix: process.env.PREFIX || ']', onMessageUpdate: true},
             await this.findPlugins(),
         );
@@ -101,6 +109,14 @@ export default class Kernel {
             );
         });
         this.container.bind<Client>(CFTypes.discordClient).toService(Types.discord.client);
+        this.container.bind<Express>(Types.webserver).toDynamicValue(() => {
+            const app = express();
+            app.use(require('morgan')('dev'))
+               .use(require('compression')())
+               .use(require('body-parser').json());
+
+            return app;
+        });
 
         // initialize command Framework
         await commandFramework.initialize();
@@ -121,13 +137,22 @@ export default class Kernel {
                 local = true;
             }
 
-            this.logger.info('Loading plugin: %s - %s - Local: %s', name, pkg, local ? 'yes' : 'no');
             plugins[name] = (await import(pkg)).default;
-            this.logger.info('Attempting to load package.json: %s', resolve(pkg, 'package.json'));
-            const info = require(
-                local
-                ? resolve(pkg, '..', 'package.json')
-                : pkg + '/package.json',
+            const info    = require(local ? resolve(pkg, '..', 'package.json') : pkg + '/package.json');
+
+            let types;
+            try {
+                types = (await import(pkg + '/types')).default;
+                this.container.bind<any>('Types.' + name).toConstantValue(types);
+                Types.plugins[name] = types;
+            } catch (_ignored) {
+            }
+            this.logger.info(
+                'Loading plugin: %s - %s - Local: %s - Types: %s',
+                name,
+                pkg,
+                local ? 'yes' : 'no',
+                types ? 'yes' : 'no',
             );
 
             plugins[name].Name = info.pluginTitle || info.name;
@@ -147,7 +172,7 @@ export default class Kernel {
         });
 
         client.on('debug', this.logger.debug.bind(this.debug));
-        client.on('error', (err) => this.logger.error('error from Discord client: %s', err));
+        client.on('error', (err) => this.logger.error('error from Discord client: %O', err));
 
         await client.connect();
         this.logger.info('Discord client is connecting');

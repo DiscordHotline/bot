@@ -13,7 +13,10 @@
     "private": true,
     "devDependencies": {
         "@types/dotenv": "^6.1.0",
+        "@types/express": "^4.16.0",
+        "@types/mysql": "^2.15.5",
         "@types/node": "^10.12.18",
+        "@types/node-emoji": "^1.8.0",
         "@types/node-vault": "^0.5.3",
         "@types/source-map-support": "^0.4.1",
         "nodemon": "^1.18.9",
@@ -24,21 +27,29 @@
     "dependencies": {
         "@hotline/application-plugin": "^1.3.1",
         "@hotline/core-plugin": "^2.0.5",
+        "@hotline/report-plugin": "^1.0.0",
+        "body-parser": "^1.18.3",
+        "compression": "^1.7.3",
         "dotenv": "^6.2.0",
         "eris": "^0.9.0",
-        "eris-command-framework": "^2.0.2",
+        "eris-command-framework": "^2.2.13",
+        "express": "^4.16.4",
         "inversify": "^5.0.1",
         "linqts": "^1.12.2",
+        "morgan": "^1.9.1",
         "mysql": "^2.16.0",
+        "node-emoji": "^1.8.1",
         "node-vault": "^0.9.5",
         "reflect-metadata": "^0.1.12",
         "source-map-support": "^0.5.9",
         "typeorm": "^0.2.9",
-        "winston": "^3.1.0"
+        "winston": "^3.1.0",
+        "yes-no": "0.0.1"
     },
     "plugins": {
         "CorePlugin": "@hotline/core-plugin",
-        "ApplicationPlugin": "@hotline/application-plugin"
+        "ApplicationPlugin": "@hotline/application-plugin",
+        "ReportPlugin": "@hotline/report-plugin"
     },
     "pluginConfigs": {
         "ApplicationPlugin": {
@@ -46,6 +57,12 @@
             "approvalChannel": "524276373682913280",
             "voteChannel": "525909837440221184",
             "inviteChannel": "204366445788790786"
+        },
+        "ReportPlugin": {
+            "hotlineGuildId": "204100839806205953",
+            "apiUrl": "http://localhost:3000/",
+            "reportChannel": "522895713705918475",
+            "subscriptions": []
         }
     }
 }
