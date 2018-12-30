@@ -111,7 +111,14 @@ export default class Kernel {
                 ctx.container.get<ClientOptions>(Types.discord.options),
             );
         });
+        this.container.bind<Client>(Types.discord.restClient).toDynamicValue((ctx) => {
+            return new Client(
+                'Bot ' + ctx.container.get<string>(Types.discord.token),
+                {restMode: true, ...ctx.container.get<ClientOptions>(Types.discord.options)},
+            );
+        });
         this.container.bind<Client>(CFTypes.discordClient).toService(Types.discord.client);
+        this.container.bind<Client>(CFTypes.discordRestClient).toService(Types.discord.restClient);
         this.container.bind<Express>(Types.webserver).toDynamicValue(() => {
             const app = express();
             app.use(require('morgan')('dev'))
@@ -177,9 +184,9 @@ export default class Kernel {
             if (process.env.ENVIRONMENT !== 'dev') {
                 // tslint:disable-next-line
                 new hookcord.Hook().setOptions({link: await this.vault.getSecret('bot', 'webhook')})
-                    .setPayload({content: 'Bot is ready'})
-                    .fire()
-                    .catch(console.error);
+                                   .setPayload({content: 'Bot is ready'})
+                                   .fire()
+                                   .catch(console.error);
             }
         });
 
