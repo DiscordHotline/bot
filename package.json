@@ -25,7 +25,7 @@
         "typescript": "^3.2.2"
     },
     "dependencies": {
-        "@hotline/application-plugin": "^1.11.1",
+        "@hotline/application-plugin": "^1.12.0",
         "@hotline/core-plugin": "^2.0.6",
         "@hotline/report-plugin": "^1.0.5",
         "body-parser": "^1.18.3",
@@ -57,7 +57,8 @@
             "hotlineGuildId": "204100839806205953",
             "approvalChannel": "524276373682913280",
             "voteChannel": "525909837440221184",
-            "inviteChannel": "204366445788790786"
+            "inviteChannel": "204366445788790786",
+            "discussionCategory": "529122394124714014"
         },
         "ReportPlugin": {
             "hotlineGuildId": "204100839806205953",
