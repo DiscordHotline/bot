@@ -43,7 +43,7 @@
         "node-vault": "^0.9.5",
         "reflect-metadata": "^0.1.12",
         "source-map-support": "^0.5.9",
-        "typeorm": "^0.2.9",
+        "typeorm": "^0.2.11",
         "winston": "^3.1.0",
         "yes-no": "0.0.1"
     },
