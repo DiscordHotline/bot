@@ -30,7 +30,7 @@
     "dependencies": {
         "@hotline/application-plugin": "^1.19.4",
         "@hotline/core-plugin": "^2.0.10",
-        "@hotline/report-plugin": "^1.0.8",
+        "@hotline/report-plugin": "^1.0.9",
         "body-parser": "^1.18.3",
         "compression": "^1.7.3",
         "dotenv": "^6.2.0",
