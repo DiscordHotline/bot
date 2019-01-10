@@ -183,7 +183,7 @@ export default class Kernel {
             this.logger.info('Discord client is ready');
             if (process.env.ENVIRONMENT !== 'dev') {
                 // tslint:disable-next-line
-                new hookcord.Hook().setOptions({link: await this.vault.getSecret('bot', 'webhook')})
+                new hookcord.Hook().setOptions({link: await this.vault.getSecret('bot', 'report')})
                                    .setPayload({content: 'Bot is ready'})
                                    .fire()
                                    .catch(console.error);
