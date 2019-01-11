@@ -52,7 +52,6 @@ export default class Kernel {
     private async boot(): Promise<void> {
         await this.initializeContainer();
 
-        this.logger.info('foo');
         const commandHandler = this.container.get<CommandHandler>(CFTypes.command.handler);
         commandHandler.events.beforeExecute = (context: CommandContext) => {
             const hotline = context.client.guilds.get('204100839806205953');
@@ -146,16 +145,8 @@ export default class Kernel {
             return app;
         });
 
-
         // initialize command Framework
-        try {
-            await commandFramework.initialize();
-        } catch (e) {
-            this.logger.error('Error initializing command framework: %O', e);
-
-            throw e;
-        }
-        this.logger.info('foo');
+        await commandFramework.initialize();
     }
 
     private async findPlugins(): Promise<{ [name: string]: typeof AbstractPlugin }> {
