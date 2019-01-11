@@ -29,7 +29,7 @@
     },
     "dependencies": {
         "@hotline/application-plugin": "^1.19.6",
-        "@hotline/core-plugin": "^2.0.11",
+        "@hotline/core-plugin": "^2.0.12",
         "@hotline/report-plugin": "^1.1.7",
         "body-parser": "^1.18.3",
         "compression": "^1.7.3",
@@ -46,7 +46,7 @@
         "node-emoji": "^1.8.1",
         "node-vault": "^0.9.5",
         "reflect-metadata": "^0.1.12",
-        "source-map-support": "^0.5.9",
+        "source-map-support": "^0.5.10",
         "typeorm": "^0.2.11",
         "winston": "^3.1.0",
         "yes-no": "0.0.1"
