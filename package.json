@@ -28,14 +28,14 @@
         "typescript": "^3.2.2"
     },
     "dependencies": {
-        "@hotline/application-plugin": "^1.19.5",
+        "@hotline/application-plugin": "^1.19.6",
         "@hotline/core-plugin": "^2.0.11",
-        "@hotline/report-plugin": "^1.1.3",
+        "@hotline/report-plugin": "^1.1.5",
         "body-parser": "^1.18.3",
         "compression": "^1.7.3",
         "dotenv": "^6.2.0",
         "eris": "^0.9.0",
-        "eris-command-framework": "^2.3.0",
+        "eris-command-framework": "^2.4.1",
         "express": "^4.16.4",
         "flatted": "^2.0.0",
         "hookcord": "^2.0.0",

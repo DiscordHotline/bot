@@ -1,5 +1,11 @@
 import {Client, ClientOptions} from 'eris';
-import {AbstractPlugin, CommandFramework, types as CFTypes} from 'eris-command-framework';
+import {
+    AbstractPlugin,
+    CommandContext,
+    CommandFramework,
+    CommandHandler,
+    types as CFTypes,
+} from 'eris-command-framework';
 import * as express from 'express';
 import {Express} from 'express';
 import {existsSync} from 'fs';
@@ -45,6 +51,17 @@ export default class Kernel {
 
     private async boot(): Promise<void> {
         await this.initializeContainer();
+
+        this.logger.info('foo');
+        const commandHandler = this.container.get<CommandHandler>(CFTypes.command.handler);
+        commandHandler.events.beforeExecute = (context: CommandContext) => {
+            const hotline = context.client.guilds.get('204100839806205953');
+            try {
+                return !!hotline.members.get(context.user.id);
+            } catch (e) {
+                return false;
+            }
+        };
 
         await this.initializeDiscordClient(this.container.get<Client>(Types.discord.client));
         this.container.get<Express>(Types.webserver)
@@ -129,8 +146,16 @@ export default class Kernel {
             return app;
         });
 
+
         // initialize command Framework
-        await commandFramework.initialize();
+        try {
+            await commandFramework.initialize();
+        } catch (e) {
+            this.logger.error('Error initializing command framework: %O', e);
+
+            throw e;
+        }
+        this.logger.info('foo');
     }
 
     private async findPlugins(): Promise<{ [name: string]: typeof AbstractPlugin }> {
