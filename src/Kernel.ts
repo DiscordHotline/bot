@@ -56,7 +56,13 @@ export default class Kernel {
         commandHandler.events.beforeExecute = (context: CommandContext) => {
             const hotline = context.client.guilds.get('204100839806205953');
             try {
-                return !!hotline.members.get(context.user.id);
+                const member = hotline.members.get(context.user.id);
+                if (!member) {
+                    return false;
+                }
+
+                // Only allow members who are in the Member role.
+                return member.roles.indexOf('531617261077790720');
             } catch (e) {
                 return false;
             }
