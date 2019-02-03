@@ -62,7 +62,7 @@ export default class Kernel {
                 }
 
                 // Only allow members who are in the Member role.
-                return member.roles.indexOf('531617261077790720');
+                return member.roles.indexOf('531617261077790720') >= 0;
             } catch (e) {
                 return false;
             }
