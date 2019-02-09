@@ -56,12 +56,8 @@
     },
     "pluginConfigs": {
         "ApplicationPlugin": {
-            "hotlineGuildId": "204100839806205953",
-            "approvalChannel": "524276373682913280",
-            "voteChannel": "525909837440221184",
-            "inviteChannel": "204366445788790786",
-            "discussionCategory": "529122394124714014",
-            "serverOwnerRole": "287139107199516672"
+            "serverListChannel": "268659870037704705",
+            "dividerRole": "204103172682153984",
         },
         "ReportPlugin": {
             "hotlineGuildId": "204100839806205953",
