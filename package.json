@@ -15,18 +15,18 @@
         "@types/body-parser": "^1.17.0",
         "@types/compression": "^0.0.36",
         "@types/dotenv": "^6.1.0",
-        "@types/express": "^4.16.0",
+        "@types/express": "^4.16.1",
         "@types/morgan": "^1.7.35",
         "@types/mysql": "^2.15.5",
-        "@types/node": "^10.12.18",
-        "@types/node-emoji": "^1.8.0",
+        "@types/node": "^10.12.24",
+        "@types/node-emoji": "^1.8.1",
         "@types/node-vault": "^0.5.3",
         "@types/source-map-support": "^0.4.1",
         "mocha": "^5.2.0",
-        "nodemon": "^1.18.9",
+        "nodemon": "^1.18.10",
         "ts-lint": "^4.5.1",
         "ts-node": "^7.0.1",
-        "typescript": "^3.2.2"
+        "typescript": "^3.3.3"
     },
     "dependencies": {
         "body-parser": "^1.18.3",
@@ -43,14 +43,14 @@
         "mysql": "^2.16.0",
         "node-emoji": "^1.8.1",
         "node-vault": "^0.9.5",
-        "reflect-metadata": "^0.1.12",
+        "reflect-metadata": "^0.1.13",
         "source-map-support": "^0.5.10",
-        "typeorm": "^0.2.11",
-        "winston": "^3.1.0",
+        "typeorm": "^0.2.12",
+        "winston": "^3.2.1",
         "yes-no": "0.0.1"
     },
     "plugins": {
-        "CorePlugin": "@hotline/core-plugin",
+        "CorePlugin": "@hotline/core-plugin:^2.0",
         "ApplicationPlugin": "@hotline/application-plugin:^1.19",
         "ReportPlugin": "@hotline/report-plugin:^1.3"
     },
