@@ -29,9 +29,6 @@
         "typescript": "^3.2.2"
     },
     "dependencies": {
-        "@hotline/application-plugin": "^1.19.6",
-        "@hotline/core-plugin": "^2.0.12",
-        "@hotline/report-plugin": "^1.3.0",
         "body-parser": "^1.18.3",
         "compression": "^1.7.3",
         "dotenv": "^6.2.0",
@@ -54,8 +51,8 @@
     },
     "plugins": {
         "CorePlugin": "@hotline/core-plugin",
-        "ApplicationPlugin": "@hotline/application-plugin",
-        "ReportPlugin": "@hotline/report-plugin"
+        "ApplicationPlugin": "@hotline/application-plugin:^1.19",
+        "ReportPlugin": "@hotline/report-plugin:^1.3"
     },
     "pluginConfigs": {
         "ApplicationPlugin": {

@@ -52,7 +52,7 @@ export default class Kernel {
     private async boot(): Promise<void> {
         await this.initializeContainer();
 
-        const commandHandler = this.container.get<CommandHandler>(CFTypes.command.handler);
+        const commandHandler                = this.container.get<CommandHandler>(CFTypes.command.handler);
         commandHandler.events.beforeExecute = (context: CommandContext) => {
             const hotline = context.client.guilds.get('204100839806205953');
             try {
@@ -162,7 +162,8 @@ export default class Kernel {
         const packagePlugins = pkgJson.plugins;
         const packageConfigs = pkgJson.pluginConfigs;
         for (const name of Object.keys(packagePlugins)) {
-            let pkg: string = packagePlugins[name];
+            let split       = packagePlugins[name].split(':');
+            let pkg         = split[0];
             const localPath = resolve(__dirname, '..', 'plugins', ...pkg.split('/'));
             let local       = false;
             if (existsSync(localPath)) {
