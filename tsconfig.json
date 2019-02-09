@@ -1,10 +1,16 @@
 {
     "compileOnSave":   false,
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts"
+    ],
     "compilerOptions": {
         "target":                       "es2017",
         "module":                       "commonjs",
         "jsx":                          "preserve",
-        "allowJs":                      true,
         "moduleResolution":             "node",
         "allowSyntheticDefaultImports": true,
         "noUnusedLocals":               true,
