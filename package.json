@@ -50,9 +50,9 @@
         "yes-no": "0.0.1"
     },
     "plugins": {
-        "CorePlugin": "@hotline/core-plugin:^2.0",
-        "ApplicationPlugin": "@hotline/application-plugin:^1.19",
-        "ReportPlugin": "@hotline/report-plugin:^1.3"
+        "CorePlugin": "@hotline/core-plugin",
+        "ApplicationPlugin": "@hotline/application-plugin",
+        "ReportPlugin": "@hotline/report-plugin"
     },
     "pluginConfigs": {
         "ApplicationPlugin": {
