@@ -9,4 +9,4 @@ for (const plugin of Object.values(plugins)) {
     packages.push(package + (version ? '@' + version : ''));
 }
 
-console.log('npm install ' + packages.join(' '));
+console.log('npm install --no-save ' + packages.join(' '));
