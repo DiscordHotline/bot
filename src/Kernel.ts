@@ -213,7 +213,7 @@ export default class Kernel {
             }
         });
 
-        client.on('debug', this.logger.debug.bind(this.debug));
+        client.on('debug', (msg, ...ctx) => this.logger.debug(msg, ...ctx));
         client.on('error', (err) => this.logger.error('error from Discord client: %O', err));
 
         await client.connect();
