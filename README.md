@@ -27,12 +27,12 @@ You can copy what is in the CorePlugin. TL;DR:
     {
         "plugins": {
           "CorePlugin": "@hotline/core-plugin",
-          "MyAwesomePlugin": "my-awesome-local-plugin"
+          "MyAwesomePlugin": "@hotline/my-awesome-local-plugin"
         }
     }
     ```
     
-* To develop locally, place the plugin in `./plugins/my-awesome-local-plugin`
-    * It will do a `require('plugins/my-awesome-local-plugin/src/')`
+* To develop locally, place the plugin in `./plugins/@hotline/my-awesome-local-plugin`
+    * It will do a `require('plugins/@hotline/my-awesome-local-plugin/src/')`
     
 * Your plugin must exist in index.js and must be a class that extends the `eris-command-framework`'s `AbstractPlugin`. 
