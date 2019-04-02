@@ -101,7 +101,11 @@ export default class Kernel {
         const commandFramework = new CommandFramework(
             this.container,
             Types,
-            {prefix: process.env.PREFIX || ']', onMessageUpdate: true},
+            {
+                prefix: process.env.PREFIX || ']', 
+                onMessageUpdate: true,
+                owners: ['97774439319486464', '108432868149035008']
+            },
             await this.findPlugins(),
         );
 
