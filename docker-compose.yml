@@ -20,7 +20,7 @@ services:
         environment:
             DEBUG: 1
             ENVIRONMENT: 'dev'
-            VAULT_FILE: "/app/dev.vault.json"
+            SECRETS_FILE: "/app/dev.secrets.json"
         volumes:
             - .:/app
 

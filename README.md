@@ -12,7 +12,7 @@ Below are the instructions for getting started with the Discord Hotline bot
 ### Install
 
 * Fork and Clone this package
-* Copy `dev.vault.json.dist` to `dev.vault.json` and put in your dev bot's Discord token.
+* Copy `dev.secrets.json.dist` to `dev.secrets.json` and put in your dev bot's Discord token.
 * Run: `$ docker-compose up -d`
 * View the logs with `$ docker-compose logs -f bot`
 

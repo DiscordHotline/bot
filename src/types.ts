@@ -1,7 +1,6 @@
 const Types = {
-    vault:     {
-        client: Symbol('vault.client'),
-        config: Symbol('vault.config'),
+    secrets:   {
+        manager: Symbol('secrets.manager'),
     },
     database:  Symbol('database'),
     discord:   {

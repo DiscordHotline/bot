@@ -4,7 +4,7 @@
         "src/*.ts",
         "src/**/*.ts",
         "package.json",
-        "dev.vault.json",
+        "dev.secrets.json",
         "plugins/**/*.ts",
         ".env"
     ],

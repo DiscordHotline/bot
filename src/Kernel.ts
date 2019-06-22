@@ -1,3 +1,6 @@
+import {Adapter} from '@secretary/aws-secrets-manager-adapter';
+import {Manager} from '@secretary/core';
+import {Adapter as JsonAdapter} from '@secretary/json-file-adapter';
 import {Client, ClientOptions} from 'eris';
 import {
     AbstractPlugin,
@@ -16,15 +19,14 @@ import {Connection, createConnection} from 'typeorm';
 import {createLogger, format, Logger, transports} from 'winston';
 
 import Types from './types';
-import Config from './Vault/Config';
-import Vault from './Vault/Vault';
+import SecretsManager = require('aws-sdk/clients/secretsmanager');
 
 export default class Kernel {
     public readonly container: Container = new Container({defaultScope: 'Singleton'});
 
     private readonly logger: Logger;
 
-    private vault: Vault;
+    private secrets: Manager;
 
     // tslint:disable-next-line:no-shadowed-variable
     constructor(private readonly environment: string, private readonly debug: boolean) {
@@ -85,38 +87,48 @@ export default class Kernel {
         this.container.bind<Logger>(Types.logger).toConstantValue(this.logger);
         this.container.bind<Logger>(CFTypes.logger).toService(Types.logger);
 
-        // Vault
-        this.container.bind<Config>(Types.vault.config).toConstantValue({
-            vaultFile: process.env.VAULT_FILE,
-            address:   process.env.VAULT_ADDR,
-            rootToken: process.env.VAULT_TOKEN,
-            roleId:    process.env.VAULT_ROLE_ID,
-            secretId:  process.env.VAULT_SECRET_ID,
+        // Secretary
+        this.container.bind<Manager>(Types.secrets.manager).toDynamicValue(() => {
+            if (process.env.SECRETS_FILE) {
+                return new Manager(new JsonAdapter({file: process.env.SECRETS_FILE}));
+            }
+
+            const client = new SecretsManager({
+                region:      'us-east-1',
+                credentials: {
+                    accessKeyId:     process.env.AWS_ACCESS_KEY_ID,
+                    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+                },
+            });
+
+            return new Manager(new Adapter(client));
         });
-        this.container.bind<Vault>(Types.vault.client).to(Vault);
-        this.vault = this.container.get<Vault>(Types.vault.client);
-        await this.vault.initialize();
+        this.secrets = this.container.get(Types.secrets.manager);
 
         // command Framework
         const commandFramework = new CommandFramework(
             this.container,
             Types,
             {
-                prefix: process.env.PREFIX || ']',
+                prefix:          process.env.PREFIX || ']',
                 onMessageUpdate: true,
-                owners: ['108432868149035008', '97774439319486464'],
+                owners:          ['108432868149035008', '97774439319486464'],
             },
             await this.findPlugins(),
         );
 
         // database/TypeORM
+        const dbSecret   = {
+            ...(await this.secrets.getSecret('hotline/database')).value as any,
+            ...(await this.secrets.getSecret('hotline/bot/database')).value as any,
+        };
         const connection = await createConnection({
             synchronize:       true,
-            host:              await this.vault.getSecret('database', 'host'),
-            database:          await this.vault.getSecret('bot/database', 'name'),
+            host:              dbSecret.host,
+            database:          dbSecret.name,
             port:              3306,
-            username:          await this.vault.getSecret('bot/database', 'user'),
-            password:          await this.vault.getSecret('bot/database', 'password'),
+            username:          dbSecret.user,
+            password:          dbSecret.password,
             type:              'mysql',
             supportBigNumbers: true,
             bigNumberStrings:  true,
@@ -128,8 +140,8 @@ export default class Kernel {
         this.container.bind<Connection>(CFTypes.connection).toConstantValue(connection);
 
         // Discord client
-        this.container.bind<string>(Types.discord.token)
-            .toConstantValue(await this.vault.getSecret('discord', 'token'));
+        const {value: {token}} = await this.secrets.getSecret<{ token: string }>('hotline/discord');
+        this.container.bind<string>(Types.discord.token).toConstantValue(token);
         this.container.bind<ClientOptions>(Types.discord.options).toConstantValue({});
         this.container.bind<Client>(Types.discord.client).toDynamicValue((ctx) => {
             return new Client(
@@ -210,7 +222,8 @@ export default class Kernel {
             this.logger.info('Discord client is ready');
             if (process.env.ENVIRONMENT !== 'dev') {
                 // tslint:disable-next-line
-                new hookcord.Hook().setOptions({link: await this.vault.getSecret('bot', 'webhook')})
+                const {value: {webhook: link}} = await this.secrets.getSecret<{ webhook: string }>('hotline/bot/discord');
+                new hookcord.Hook().setOptions({link})
                                    .setPayload({content: 'Bot is ready'})
                                    .fire()
                                    .catch(console.error);
