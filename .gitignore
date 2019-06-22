@@ -1,4 +1,4 @@
 dist
-dev.vault.json
+dev.secrets.json
 plugins
 node_modules
