@@ -6,6 +6,8 @@ ARG ENVIRONMENT=dev
 ENV SCRIPT=$SCRIPT
 ENV NODE_ENV=$ENIRONMENT
 
+RUN apk add --update git
+
 CMD $(node installPlugins.js) && npm run $SCRIPT
 WORKDIR /app
 
