@@ -43,7 +43,7 @@
         "flatted": "^2.0.1",
         "hookcord": "^2.0.2",
         "inversify": "^5.0.1",
-        "linqts": "^1.12.1",
+        "linqts": "1.12.1",
         "millisec": "^0.2.0",
         "morgan": "^1.9.1",
         "mysql": "^2.17.1",
