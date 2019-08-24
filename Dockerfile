@@ -8,7 +8,7 @@ ENV NODE_ENV=$ENIRONMENT
 
 RUN apk add --update git
 
-CMD $(node installPlugins.js) && npm run $SCRIPT
+CMD npm run $SCRIPT
 WORKDIR /app
 
 COPY package.json package-lock.json /app/

@@ -33,6 +33,7 @@
         "@secretary/aws-secrets-manager-adapter": "^2.0.2",
         "@secretary/core": "^2.0.2",
         "aws-sdk": "^2.480.0",
+        "axios": "^0.19.0",
         "body-parser": "^1.18.3",
         "compression": "^1.7.4",
         "dotenv": "^6.2.0",
@@ -43,19 +44,22 @@
         "hookcord": "^2.0.1",
         "inversify": "^5.0.1",
         "linqts": "^1.12.2",
+        "millisec": "^0.2.0",
         "morgan": "^1.9.1",
         "mysql": "^2.16.0",
         "node-emoji": "^1.10.0",
         "reflect-metadata": "^0.1.13",
+        "require-context": "^1.1.0",
         "source-map-support": "^0.5.11",
+        "transliteration": "^2.1.5",
         "typeorm": "^0.2.16",
         "winston": "^3.2.1",
         "yes-no": "0.0.1"
     },
     "plugins": {
-        "CorePlugin": "@hotline/core-plugin",
-        "ApplicationPlugin": "@hotline/application-plugin",
-        "ReportPlugin": "@hotline/report-plugin"
+        "CorePlugin": "./plugin/core-plugin",
+        "ApplicationPlugin": "./plugin/application-plugin",
+        "ReportPlugin": "./plugin/report-plugin"
     },
     "pluginConfigs": {
         "ApplicationPlugin": {

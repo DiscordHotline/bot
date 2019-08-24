@@ -1,5 +1,5 @@
 {
-    "compileOnSave":   false,
+    "compileOnSave": false,
     "include": [
         "src/**/*"
     ],
@@ -8,34 +8,45 @@
         "**/*.spec.ts"
     ],
     "compilerOptions": {
-        "target":                       "es2017",
-        "module":                       "commonjs",
-        "jsx":                          "preserve",
-        "moduleResolution":             "node",
+        "target": "es2017",
+        "module": "commonjs",
+        "moduleResolution": "node",
         "allowSyntheticDefaultImports": true,
-        "noUnusedLocals":               true,
-        "noUnusedParameters":           true,
-        "removeComments":               false,
-        "preserveConstEnums":           true,
-        "sourceMap":                    true,
-        "skipLibCheck":                 true,
-        "baseUrl":                      ".",
-        "experimentalDecorators":       true,
-        "emitDecoratorMetadata":        true,
-        "noImplicitAny":                false,
-        "outDir":                       "dist/",
-        "pretty":                       true,
-        "lib":                          [
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "removeComments": false,
+        "preserveConstEnums": true,
+        "sourceMap": true,
+        "skipLibCheck": true,
+        "incremental": true,
+        "baseUrl": "src",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "noImplicitAny": false,
+        "outDir": "dist/",
+        "pretty": true,
+        "paths": {
+            "@hotline/application-plugin/*": [
+                "plugin/application-plugin/*"
+            ],
+            "@hotline/core-plugin/*": [
+                "plugin/core-plugin/*"
+            ],
+            "@hotline/report-plugin/*": [
+                "plugin/report-plugin/*"
+            ]
+        },
+        "lib": [
             "es2017.object",
             "es2015",
             "es2017",
             "esnext",
             "dom"
         ],
-        "typeRoots":                    [
+        "typeRoots": [
             "./node_modules/@types"
         ],
-        "types":                        [
+        "types": [
             "node",
             "reflect-metadata"
         ]
