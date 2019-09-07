@@ -38,7 +38,7 @@
         "compression": "^1.7.4",
         "dotenv": "^8.1.0",
         "eris": "^0.10.1",
-        "eris-command-framework": "^2.5.7",
+        "eris-command-framework": "^2.5.8",
         "express": "^4.17.1",
         "flatted": "^2.0.1",
         "hookcord": "^2.0.2",
