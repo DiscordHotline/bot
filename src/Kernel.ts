@@ -228,7 +228,11 @@ export default class Kernel {
             }
         });
 
-        client.on('debug', (msg, ...ctx) => this.logger.debug(msg, ...ctx));
+        client.on('debug', (msg, ...ctx) => {
+            if (!msg.includes('presence update')) {
+                this.logger.debug(msg, ...ctx);
+            }
+        });
         client.on('error', (err) => this.logger.error('error from Discord client: %O', err));
 
         await client.connect();
