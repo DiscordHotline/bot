@@ -52,13 +52,9 @@ export default class ApplicationVoteListener {
         try {
             voteMessage = await this.client.getMessage(voteMessage.channel.id, voteMessage.id);
         } catch (e) {
-            console.log(`No VoteMessage`, e, voteMessage);
-
             return;
         }
         if (!voteMessage.channel || voteMessage.channel.id !== this.voteChannel.id) {
-            console.log(`No VoteMessage`, voteMessage);
-
             return;
         }
 

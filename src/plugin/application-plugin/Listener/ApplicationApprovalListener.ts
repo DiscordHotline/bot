@@ -97,13 +97,9 @@ export default class ApplicationApprovalListener {
         try {
             approvalMessage = await this.client.getMessage(approvalMessage.channel.id, approvalMessage.id);
         } catch (e) {
-            console.error('No ApprovalMessage', e, approvalMessage);
-
             return;
         }
         if (!approvalMessage.channel || approvalMessage.channel.id !== this.config.approvalChannel) {
-            console.error('No ApprovalMessage', approvalMessage);
-
             return;
         }
 
