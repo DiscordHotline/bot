@@ -43,6 +43,7 @@ export default class ApplicationService {
 
     public async initialize(): Promise<void> {
         this.client.on('ready', async () => {
+            await sleep(5000);
             if (!this.config.approvalChannel) {
                 throw new Error('Approval channel not set!');
             }
