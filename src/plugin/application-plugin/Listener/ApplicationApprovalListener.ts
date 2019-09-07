@@ -94,8 +94,16 @@ export default class ApplicationApprovalListener {
         _emoji: {id: string, name: string},
         userId: string,
     ): Promise<void> {
-        approvalMessage = await this.client.getMessage(approvalMessage.channel.id, approvalMessage.id);
+        try {
+            approvalMessage = await this.client.getMessage(approvalMessage.channel.id, approvalMessage.id);
+        } catch (e) {
+            console.error('No ApprovalMessage', e, approvalMessage);
+
+            return;
+        }
         if (!approvalMessage.channel || approvalMessage.channel.id !== this.config.approvalChannel) {
+            console.error('No ApprovalMessage', approvalMessage);
+
             return;
         }
 
