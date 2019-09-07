@@ -135,7 +135,11 @@ export default class ReportListener {
         userId: string,
     ): Promise<void> {
         if (!message.author) {
-            message = await message.channel.getMessage(message.id);
+            try {
+                message = await message.channel.getMessage(message.id);
+            } catch (e) {
+                console.error(`I failed to get a message!`, message);
+            }
         }
         if (message.author.id !== this.client.user.id || userId === this.client.user.id) {
             return;
