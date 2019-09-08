@@ -140,7 +140,7 @@ export default class Kernel {
         this.container.bind<Connection>(CFTypes.connection).toConstantValue(connection);
 
         // Discord client
-        const {value: {token}} = await this.secrets.getSecret<{ token: string }>('hotline/discord');
+        const {value: {token}} = await this.secrets.getSecret<{token: string}>('hotline/discord');
         this.container.bind<string>(Types.discord.token).toConstantValue(token);
         this.container.bind<ClientOptions>(Types.discord.options).toConstantValue({});
         this.container.bind<Client>(Types.discord.client).toDynamicValue((ctx) => {
@@ -160,9 +160,9 @@ export default class Kernel {
         this.container.bind<Express>(Types.webserver).toDynamicValue(() => {
             const app = express();
             app.use(require('morgan')('dev'))
-               .use(require('compression')())
-               .use(require('body-parser').json())
-               .get('/', (_, res) => res.json({status: 'ok'}));
+                .use(require('compression')())
+                .use(require('body-parser').json())
+                .get('/', (_, res) => res.json({status: 'ok'}));
 
             return app;
         });
@@ -171,8 +171,8 @@ export default class Kernel {
         await commandFramework.initialize();
     }
 
-    private async findPlugins(): Promise<{ [name: string]: typeof AbstractPlugin }> {
-        const plugins: { [name: string]: typeof AbstractPlugin } = {};
+    private async findPlugins(): Promise<{[name: string]: typeof AbstractPlugin}> {
+        const plugins: {[name: string]: typeof AbstractPlugin} = {};
 
         const pkgJson        = require('../package.json');
         const packagePlugins = pkgJson.plugins;
@@ -180,15 +180,14 @@ export default class Kernel {
         for (const name of Object.keys(packagePlugins)) {
             let split       = packagePlugins[name].split(':');
             let pkg         = split[0];
-            const localPath = resolve(__dirname, '..', 'plugins', ...pkg.split('/'));
+            const localPath = resolve(__dirname, pkg);
             let local       = false;
             if (existsSync(localPath)) {
-                pkg   = resolve(localPath, 'src');
+                pkg   = localPath;
                 local = true;
             }
 
             plugins[name] = (await import(pkg)).default;
-            const info    = require(local ? resolve(pkg, '..', 'package.json') : pkg + '/package.json');
 
             let types;
             try {
@@ -198,15 +197,14 @@ export default class Kernel {
             } catch (_ignored) {
             }
             this.logger.info(
-                'Loading plugin: %s%s - %s - Local: %s - Types: %s',
+                'Loading plugin: %s - %s - Local: %s - Types: %s',
                 name,
-                local ? '' : ` v${info.version}`,
                 pkg,
                 local ? 'yes' : 'no',
                 types ? 'yes' : 'no',
             );
 
-            plugins[name].Name = info.pluginTitle || info.name;
+            plugins[name].Name = name;
 
             // @todo Validate config
             plugins[name].Config = packageConfigs[name] || {};
@@ -222,15 +220,19 @@ export default class Kernel {
             this.logger.info('Discord client is ready');
             if (process.env.ENVIRONMENT !== 'dev') {
                 // tslint:disable-next-line
-                const {value: {webhook: link}} = await this.secrets.getSecret<{ webhook: string }>('hotline/bot/discord');
+                const {value: {webhook: link}} = await this.secrets.getSecret<{webhook: string}>('hotline/bot/discord');
                 new hookcord.Hook().setOptions({link})
-                                   .setPayload({content: 'Bot is ready'})
-                                   .fire()
-                                   .catch(console.error);
+                    .setPayload({content: 'Bot is ready'})
+                    .fire()
+                    .catch(console.error);
             }
         });
 
-        client.on('debug', (msg, ...ctx) => this.logger.debug(msg, ...ctx));
+        client.on('debug', (msg, ...ctx) => {
+            if (!msg.includes('presence update')) {
+                this.logger.debug(msg, ...ctx);
+            }
+        });
         client.on('error', (err) => this.logger.error('error from Discord client: %O', err));
         client.on('shardDisconnect', (err, id) => this.logger.warn(`Shard #${id} disconnected. Error: %O`, err));
 
