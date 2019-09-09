@@ -234,6 +234,7 @@ export default class Kernel {
             }
         });
         client.on('error', (err) => this.logger.error('error from Discord client: %O', err));
+        client.on('shardDisconnect', (err, id) => this.logger.warn(`Shard #${id} disconnected. Error: %O`, err));
 
         await client.connect();
         this.logger.info('Discord client is connecting');
