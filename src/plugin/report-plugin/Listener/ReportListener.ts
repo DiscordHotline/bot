@@ -138,7 +138,7 @@ export default class ReportListener {
             try {
                 message = await message.channel.getMessage(message.id);
             } catch (e) {
-                console.error(`I failed to get a message!`, message);
+                return;
             }
         }
         if (message.author.id !== this.client.user.id || userId === this.client.user.id) {
