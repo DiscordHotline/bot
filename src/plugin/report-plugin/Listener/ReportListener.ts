@@ -145,6 +145,23 @@ export default class ReportListener {
             return;
         }
 
+        // Only allow Hotline members to react
+        const hotline = this.client.guilds.get('204100839806205953');
+            
+        try {
+            const member = hotline.members.get(userId);
+            if (!member) {
+                return;
+            }
+
+            // Only allow members who are in the Member role.
+            if (member.roles.indexOf('531617261077790720') == -1) {
+                return;
+            }
+        } catch (e) {
+            return;
+        }
+
         const reportMessage = await this.reportMessageRepo.findOne({messageId: message.id});
         if (!reportMessage) {
             return;
