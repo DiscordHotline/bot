@@ -155,7 +155,7 @@ export default class ReportListener {
             }
 
             // Only allow members who are in the Member role.
-            if (member.roles.indexOf('531617261077790720') == -1) {
+            if (!member.roles.includes('531617261077790720')) {
                 return;
             }
         } catch (e) {
