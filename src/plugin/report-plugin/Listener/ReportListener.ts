@@ -147,18 +147,19 @@ export default class ReportListener {
 
         // Only allow Hotline members to react
         const hotline = this.client.guilds.get('204100839806205953');
-            
-        try {
-            const member = hotline.members.get(userId);
-            if (!member) {
-                return;
-            }
 
-            // Only allow members who are in the Member role.
-            if (!member.roles.includes('531617261077790720')) {
-                return;
-            }
-        } catch (e) {
+        if (!hotline) {
+            return;
+        }
+
+        const member = hotline.members.get(userId);
+
+        if (!member) {
+            return;
+        }
+
+        // Only allow members who are in the Member role.
+        if (!member.roles.includes('531617261077790720')) {
             return;
         }
 
