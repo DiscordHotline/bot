@@ -269,7 +269,9 @@ export default class ReportPlugin extends AbstractPlugin {
         await report.close(false);
         delete this.reportConversations[this.context.user.id];
 
-        return this.reactOk();
+        return this.reactOk().catch(() => {
+            this.reply('Closed your report.');
+        });
     }
 
     // tslint:disable-next-line
