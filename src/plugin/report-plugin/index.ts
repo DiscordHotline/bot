@@ -418,7 +418,9 @@ tags should be \`all\` or a list (comma or space delimited) list of tags from: {
             );
         }
 
-        await this.context.message.addReaction('📫');
+        await this.context.message.addReaction('📫').catch(() => {
+            console.error(`Failed adding a acknowledgement reaction in #${this.context.channel.id}`)
+        });
         this.reportConversations[this.context.user.id] = this.reportCreatorFactory.create(
             this.context,
             init,
