@@ -261,7 +261,9 @@ export default class ReportPlugin extends AbstractPlugin {
     public async CloseReportCommand(): Promise<void> {
         const report = this.reportConversations[this.context.user.id];
         if (!report) {
-            return this.reactOk();
+            return this.reactOk().catch(() => {
+                this.reply('You do not have a report open.');
+            });
         }
 
         await report.close(false);
@@ -418,13 +420,13 @@ tags should be \`all\` or a list (comma or space delimited) list of tags from: {
             );
         }
 
-        await this.context.message.addReaction('📫').catch(() => {
-            console.error(`Failed adding a acknowledgement reaction in #${this.context.channel.id}`)
-        });
         this.reportConversations[this.context.user.id] = this.reportCreatorFactory.create(
             this.context,
             init,
         );
+        await this.context.message.addReaction('📫').catch(() => {
+            this.reply('Started the report process in your DMs.');
+        });
         this.reportConversations[this.context.user.id].on('close', () => {
             delete this.reportConversations[this.context.user.id];
         });
