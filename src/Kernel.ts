@@ -152,6 +152,17 @@ export default class Kernel {
         this.container.bind<Client>(Types.discord.restClient).toDynamicValue((ctx) => {
             return new Client(
                 'Bot ' + ctx.container.get<string>(Types.discord.token),
+                {
+                    restMode: true,
+                    intents: [
+                        'guildMembers',
+                        'guildMessages',
+                        'directMessages',
+                        'directMessageReactions',
+                        'guildMessageReactions'
+                    ],
+                    ...ctx.container.get<ClientOptions>(Types.discord.options)
+                }
                 {restMode: true, ...ctx.container.get<ClientOptions>(Types.discord.options)},
             );
         });
