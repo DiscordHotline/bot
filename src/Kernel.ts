@@ -159,9 +159,9 @@ export default class Kernel {
                         'guildMessages',
                         'directMessages',
                         'directMessageReactions',
-                        'guildMessageReactions'
+                        'guildMessageReactions',
                     ],
-                    ...ctx.container.get<ClientOptions>(Types.discord.options)
+                    ...ctx.container.get<ClientOptions>(Types.discord.options),
                 }
                 {restMode: true, ...ctx.container.get<ClientOptions>(Types.discord.options)},
             );
