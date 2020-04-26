@@ -162,8 +162,7 @@ export default class Kernel {
                         'guildMessageReactions',
                     ],
                     ...ctx.container.get<ClientOptions>(Types.discord.options),
-                }
-                {restMode: true, ...ctx.container.get<ClientOptions>(Types.discord.options)},
+                },
             );
         });
         this.container.bind<Client>(CFTypes.discordClient).toService(Types.discord.client);
