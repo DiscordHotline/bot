@@ -1,4 +1,4 @@
-import {Client, Message, TextableChannel} from 'eris';
+import {Client, GuildTextableChannel, Message} from 'eris';
 import {types as CFTypes} from 'eris-command-framework';
 import {inject, injectable} from 'inversify';
 import {Connection, Repository} from 'typeorm';
@@ -20,9 +20,9 @@ export default class ApplicationApprovalListener {
 
     private repo: Repository<Application>;
 
-    private approvalChannel: TextableChannel;
+    private approvalChannel: GuildTextableChannel;
 
-    private voteChannel: TextableChannel;
+    private voteChannel: GuildTextableChannel;
 
     public constructor(
         @inject(CFTypes.connection) connection: Connection,
@@ -49,11 +49,12 @@ export default class ApplicationApprovalListener {
                     throw new Error('Vote channel not set!');
                 }
 
-                this.approvalChannel = this.client.getChannel(this.config.approvalChannel) as TextableChannel;
+                const guild          = this.client.guilds.get('204100839806205953');
+                this.approvalChannel = guild.channels.get(this.config.approvalChannel) as GuildTextableChannel;
                 if (!this.approvalChannel) {
                     throw new Error('Approval channel not found!');
                 }
-                this.voteChannel = this.client.getChannel(this.config.voteChannel) as TextableChannel;
+                this.voteChannel = guild.channels.get(this.config.voteChannel) as GuildTextableChannel;
                 if (!this.voteChannel) {
                     throw new Error('Vote channel not found!');
                 }

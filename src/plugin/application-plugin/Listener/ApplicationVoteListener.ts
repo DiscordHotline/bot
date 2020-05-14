@@ -1,4 +1,4 @@
-import {Client, Message, TextableChannel} from 'eris';
+import {Client, GuildTextableChannel, Message} from 'eris';
 import {types as CFTypes} from 'eris-command-framework';
 import {inject, injectable} from 'inversify';
 import {Connection, Repository} from 'typeorm';
@@ -13,7 +13,7 @@ import Types from '../types';
 export default class ApplicationVoteListener {
     private repo: Repository<Application>;
 
-    private voteChannel: TextableChannel;
+    private voteChannel: GuildTextableChannel;
 
     public constructor(
         @inject(CFTypes.connection) connection: Connection,
@@ -34,7 +34,9 @@ export default class ApplicationVoteListener {
                 if (!this.config.voteChannel) {
                     throw new Error('Vote channel not set!');
                 }
-                this.voteChannel = this.client.getChannel(this.config.voteChannel) as TextableChannel;
+
+                const guild      = this.client.guilds.get('204100839806205953');
+                this.voteChannel = guild.channels.get(this.config.voteChannel) as GuildTextableChannel;
                 if (!this.voteChannel) {
                     throw new Error('Vote channel not found!');
                 }
