@@ -23,26 +23,25 @@ export default class ApplicationVoteListener {
         @inject(Types.application.config) private config: Config,
     ) {
         this.repo = connection.getRepository(Application);
+        client.once('ready', this.initialize.bind(this));
         client.on('messageReactionAdd', this.onMessageReactionAdd.bind(this));
     }
 
     public async initialize(): Promise<void> {
-        this.client.once('ready', () => {
-                setTimeout(
-                    async () => {
-                        if (!this.config.voteChannel) {
-                            throw new Error('Vote channel not set!');
-                        }
-                        this.voteChannel = this.client.getChannel(this.config.voteChannel) as TextableChannel;
-                        if (!this.voteChannel) {
-                            throw new Error('Vote channel not found!');
-                        }
+        this.logger.info('Initializing ApplicationVoteListener');
+        setTimeout(
+            async () => {
+                if (!this.config.voteChannel) {
+                    throw new Error('Vote channel not set!');
+                }
+                this.voteChannel = this.client.getChannel(this.config.voteChannel) as TextableChannel;
+                if (!this.voteChannel) {
+                    throw new Error('Vote channel not found!');
+                }
 
-                        await this.loadMessages();
-                    },
-                    10000,
-                );
+                await this.loadMessages();
             },
+            10000,
         );
     }
 
@@ -51,7 +50,9 @@ export default class ApplicationVoteListener {
         _emoji: { id: string, name: string },
         userId: string,
     ): Promise<void> {
-        if (!voteMessage || !voteMessage.channel || !this.voteChannel.id) {
+        if (!voteMessage || !voteMessage.channel || !this.voteChannel) {
+            this.logger.info('No voteMessage, or this.voteChannel in ApplicationVoteListener');
+
             return;
         }
 

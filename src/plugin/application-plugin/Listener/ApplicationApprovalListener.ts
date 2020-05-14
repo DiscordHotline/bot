@@ -32,36 +32,36 @@ export default class ApplicationApprovalListener {
         @inject(Types.application.config) private config: Config,
     ) {
         this.repo = connection.getRepository(Application);
+        client.once('ready', this.initialize.bind(this));
         client.on('messageCreate', this.onMessageCreate.bind(this));
         client.on('messageReactionAdd', this.onMessageReactionAdd.bind(this));
     }
 
     public async initialize(): Promise<void> {
-        this.client.once('ready', () => {
-            setTimeout(
-                async () => {
-                    if (!this.config.approvalChannel) {
-                        throw new Error('Approval channel not set!');
-                    }
+        this.logger.info('Initializing ApplicationApprovalListener');
+        setTimeout(
+            async () => {
+                if (!this.config.approvalChannel) {
+                    throw new Error('Approval channel not set!');
+                }
 
-                    if (!this.config.voteChannel) {
-                        throw new Error('Vote channel not set!');
-                    }
+                if (!this.config.voteChannel) {
+                    throw new Error('Vote channel not set!');
+                }
 
-                    this.approvalChannel = this.client.getChannel(this.config.approvalChannel) as TextableChannel;
-                    if (!this.approvalChannel) {
-                        throw new Error('Approval channel not found!');
-                    }
-                    this.voteChannel = this.client.getChannel(this.config.voteChannel) as TextableChannel;
-                    if (!this.voteChannel) {
-                        throw new Error('Vote channel not found!');
-                    }
+                this.approvalChannel = this.client.getChannel(this.config.approvalChannel) as TextableChannel;
+                if (!this.approvalChannel) {
+                    throw new Error('Approval channel not found!');
+                }
+                this.voteChannel = this.client.getChannel(this.config.voteChannel) as TextableChannel;
+                if (!this.voteChannel) {
+                    throw new Error('Vote channel not found!');
+                }
 
-                    await this.loadMessages();
-                },
-                10000,
-            );
-        });
+                await this.loadMessages();
+            },
+            10000,
+        );
     }
 
     private async onMessageCreate(approvalMessage: Message): Promise<void> {
