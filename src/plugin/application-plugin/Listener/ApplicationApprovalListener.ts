@@ -69,7 +69,7 @@ export default class ApplicationApprovalListener {
         if (!appMessage.channel || !this.approvalChannel || appMessage.channel.id !== this.approvalChannel.id) {
             this.logger.info('No appMessage, or this.approvalChannel in ApplicationApprovalListener');
 
-            await this.initialize();
+            await this.initialize().catch((e) => this.logger.error(e.message));
         }
         setTimeout(
             async () => {

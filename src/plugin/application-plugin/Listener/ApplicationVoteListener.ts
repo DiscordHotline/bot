@@ -54,7 +54,8 @@ export default class ApplicationVoteListener {
     ): Promise<void> {
         if (!voteMessage || !voteMessage.channel || !this.voteChannel) {
             this.logger.info('No voteMessage, or this.voteChannel in ApplicationVoteListener');
-            await this.initialize();
+
+            await this.initialize().catch((e) => this.logger.error(e.message));
         }
 
         try {

@@ -148,8 +148,10 @@ export default class Kernel {
                 ctx.container.get<string>(Types.discord.token),
                 {
                     intents: [
+                        'guilds',
                         'guildMembers',
                         'guildMessages',
+                        'guildInvites',
                         'directMessages',
                         'directMessageReactions',
                         'guildMessageReactions',
@@ -163,13 +165,6 @@ export default class Kernel {
                 'Bot ' + ctx.container.get<string>(Types.discord.token),
                 {
                     restMode: true,
-                    intents: [
-                        'guildMembers',
-                        'guildMessages',
-                        'directMessages',
-                        'directMessageReactions',
-                        'guildMessageReactions',
-                    ],
                     ...ctx.container.get<ClientOptions>(Types.discord.options),
                 },
             );
