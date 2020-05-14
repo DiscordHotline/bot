@@ -147,7 +147,6 @@ export default class Kernel {
             return new Client(
                 ctx.container.get<string>(Types.discord.token),
                 {
-                    restMode: true,
                     intents: [
                         'guildMembers',
                         'guildMessages',
