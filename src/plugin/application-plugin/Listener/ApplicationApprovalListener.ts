@@ -35,6 +35,8 @@ export default class ApplicationApprovalListener {
         client.once('ready', this.initialize.bind(this));
         client.on('messageCreate', this.onMessageCreate.bind(this));
         client.on('messageReactionAdd', this.onMessageReactionAdd.bind(this));
+
+        setInterval(() => this.loadMessages(), 60 * 60 * 1000);
     }
 
     public async initialize(): Promise<void> {

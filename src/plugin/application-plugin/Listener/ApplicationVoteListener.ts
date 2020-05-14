@@ -25,6 +25,8 @@ export default class ApplicationVoteListener {
         this.repo = connection.getRepository(Application);
         client.once('ready', this.initialize.bind(this));
         client.on('messageReactionAdd', this.onMessageReactionAdd.bind(this));
+
+        setInterval(() => this.loadMessages(), 60 * 60 * 1000);
     }
 
     public async initialize(): Promise<void> {
