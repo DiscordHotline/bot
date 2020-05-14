@@ -81,7 +81,7 @@ export default class ApplicationApprovalListener {
                         {
                             id:      appMessage.id,
                             content: appMessage.content,
-                            embeds:  appMessage.embeds[0].title,
+                            embeds:  appMessage.embeds?.[0]?.title,
                         },
                     );
 
@@ -142,7 +142,7 @@ export default class ApplicationApprovalListener {
 
         const applications: Application[] = await this.repo.find({voteApproved: ApprovalType.AWAITING});
         for (const application of applications) {
-            const [channelId, messageId] = application.approvalMessageId.split(':');
+            const [channelId, messageId] = application.approvalMessageId?.split(':') ?? [];
             try {
                 const message: Message = await this.client.getMessage(channelId, messageId);
                 if (!await this.updateApplication(message, application)) {
@@ -152,11 +152,12 @@ export default class ApplicationApprovalListener {
                 this.messages.push({application, approvalMessage: message});
             } catch (e) {
                 this.logger.warn(
-                    'Approval - Load: Found an application without a message, denying: %j',
+                    'Approval - Load: Found an application without a message, creating app approval message: %j',
                     application,
                 );
+                const message = await this.appService.postApprovalMessage(application);
 
-                application.voteApproved = ApprovalType.DENIED;
+                application.approvalMessageId = message.channel.id + ':' + message.id;
                 await application.save();
             }
         }

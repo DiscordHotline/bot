@@ -72,6 +72,45 @@ export default class ApplicationService {
         });
     }
 
+    public async postApprovalMessage(application: Application): Promise<Message> {
+        const requester = await this.restClient.getRESTUser(application.requestUser);
+        let invite: RESTChannelInvite;
+        try {
+            invite = await this.getDiscordInvite(application.inviteCode);
+        } catch (e) {
+            this.logger.error('Failed to find invite for application: %j', application);
+
+            throw e;
+        }
+
+        const embed: Embed = new Embed({
+            title:       'New Application: ' + application.guild.name,
+            description: application.reason,
+            timestamp:   application.insertDate,
+            author:      {
+                name:    `${requester.username}#${requester.discriminator}`,
+                iconUrl: `https://cdn.discordapp.com/avatars/${requester.id}/${requester.avatar}.png`,
+            },
+            thumbnail:   {
+                url: `https://cdn.discordapp.com/icons/${invite.guild.id}/${invite.guild.icon}.webp`,
+            },
+            fields:      [
+                {name: 'Invite: ', value: `https://discord.gg/${invite.code}`, inline: true},
+                {name: 'Members: ', value: `${invite.presenceCount} / ${invite.memberCount}`, inline: true},
+            ],
+            footer:      {
+                text: `Application ID: ${application.id}`,
+            },
+            color:       ApprovalColor[application.votePassed],
+        });
+
+        const message = await this.client.createMessage(this.config.approvalChannel, {embed: embed.serialize()});
+        await message.addReaction('✅');
+        await message.addReaction('❌');
+
+        return message;
+    }
+
     public async postApplicationMessage(application: Application, edit: boolean): Promise<Message> {
         const now  = moment();
         const date = moment(application.insertDate);
