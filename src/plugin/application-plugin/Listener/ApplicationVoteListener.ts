@@ -27,25 +27,31 @@ export default class ApplicationVoteListener {
     }
 
     public async initialize(): Promise<void> {
-        this.client.once('ready', async () => {
-            if (!this.config.voteChannel) {
-                throw new Error('Vote channel not set!');
-            }
-            this.voteChannel = this.client.getChannel(this.config.voteChannel) as TextableChannel;
-            if (!this.voteChannel) {
-                throw new Error('Vote channel not found!');
-            }
+        this.client.once('ready', () => {
+                setTimeout(
+                    async () => {
+                        if (!this.config.voteChannel) {
+                            throw new Error('Vote channel not set!');
+                        }
+                        this.voteChannel = this.client.getChannel(this.config.voteChannel) as TextableChannel;
+                        if (!this.voteChannel) {
+                            throw new Error('Vote channel not found!');
+                        }
 
-            await this.loadMessages();
-        });
+                        await this.loadMessages();
+                    },
+                    10000,
+                );
+            },
+        );
     }
 
     private async onMessageReactionAdd(
         voteMessage: Message,
-        _emoji: {id: string, name: string},
+        _emoji: { id: string, name: string },
         userId: string,
     ): Promise<void> {
-        if (!voteMessage || !voteMessage.channel) {
+        if (!voteMessage || !voteMessage.channel || !this.voteChannel.id) {
             return;
         }
 
@@ -54,7 +60,7 @@ export default class ApplicationVoteListener {
         } catch (e) {
             return;
         }
-        if (!voteMessage.channel || voteMessage.channel.id !== this.voteChannel.id) {
+        if (!voteMessage.channel || voteMessage.channel?.id !== this.voteChannel?.id) {
             return;
         }
 

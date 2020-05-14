@@ -37,25 +37,30 @@ export default class ApplicationApprovalListener {
     }
 
     public async initialize(): Promise<void> {
-        this.client.once('ready', async () => {
-            if (!this.config.approvalChannel) {
-                throw new Error('Approval channel not set!');
-            }
+        this.client.once('ready', () => {
+            setTimeout(
+                async () => {
+                    if (!this.config.approvalChannel) {
+                        throw new Error('Approval channel not set!');
+                    }
 
-            if (!this.config.voteChannel) {
-                throw new Error('Vote channel not set!');
-            }
+                    if (!this.config.voteChannel) {
+                        throw new Error('Vote channel not set!');
+                    }
 
-            this.approvalChannel = this.client.getChannel(this.config.approvalChannel) as TextableChannel;
-            if (!this.approvalChannel) {
-                throw new Error('Approval channel not found!');
-            }
-            this.voteChannel = this.client.getChannel(this.config.voteChannel) as TextableChannel;
-            if (!this.voteChannel) {
-                throw new Error('Vote channel not found!');
-            }
+                    this.approvalChannel = this.client.getChannel(this.config.approvalChannel) as TextableChannel;
+                    if (!this.approvalChannel) {
+                        throw new Error('Approval channel not found!');
+                    }
+                    this.voteChannel = this.client.getChannel(this.config.voteChannel) as TextableChannel;
+                    if (!this.voteChannel) {
+                        throw new Error('Vote channel not found!');
+                    }
 
-            await this.loadMessages();
+                    await this.loadMessages();
+                },
+                10000,
+            );
         });
     }
 
@@ -91,7 +96,7 @@ export default class ApplicationApprovalListener {
 
     private async onMessageReactionAdd(
         approvalMessage: Message,
-        _emoji: {id: string, name: string},
+        _emoji: { id: string, name: string },
         userId: string,
     ): Promise<void> {
         try {
