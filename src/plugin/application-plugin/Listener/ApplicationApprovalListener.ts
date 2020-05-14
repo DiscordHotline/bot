@@ -64,47 +64,51 @@ export default class ApplicationApprovalListener {
         );
     }
 
-    private async onMessageCreate(approvalMessage: Message): Promise<void> {
-        if (!approvalMessage.channel
-            || !this.approvalChannel
-            || approvalMessage.channel.id
-            !== this.approvalChannel.id) {
-            return;
+    private async onMessageCreate(appMessage: Message): Promise<void> {
+        if (!appMessage.channel || !this.approvalChannel || appMessage.channel.id !== this.approvalChannel.id) {
+            this.logger.info('No appMessage, or this.approvalChannel in ApplicationApprovalListener');
+
+            await this.initialize();
         }
         setTimeout(
             async () => {
-                const approvalMessageId = approvalMessage.channel.id + ':' + approvalMessage.id;
+                const approvalMessageId = appMessage.channel.id + ':' + appMessage.id;
                 const application       = await this.repo.findOne({approvalMessageId});
                 if (!application) {
                     this.logger.warn(
                         'Approval - message Create: Found a message without an application: %j',
                         {
-                            id:      approvalMessage.id,
-                            content: approvalMessage.content,
-                            embeds:  approvalMessage.embeds[0].title,
+                            id:      appMessage.id,
+                            content: appMessage.content,
+                            embeds:  appMessage.embeds[0].title,
                         },
                     );
 
                     return;
                 }
 
-                this.messages.push({application, approvalMessage});
+                this.messages.push({application, approvalMessage: appMessage});
             },
             5000,
         );
     }
 
     private async onMessageReactionAdd(
-        approvalMessage: Message,
+        appMessage: Message,
         _emoji: { id: string, name: string },
         userId: string,
     ): Promise<void> {
+        if (!appMessage || !appMessage.channel || !this.approvalChannel) {
+            this.logger.info('No appMessage, or this.approvalChannel in ApplicationApprovalListener');
+            await this.initialize();
+        }
+
         try {
-            approvalMessage = await this.client.getMessage(approvalMessage.channel.id, approvalMessage.id);
+            appMessage = await this.client.getMessage(appMessage.channel.id, appMessage.id);
         } catch (e) {
             return;
         }
-        if (!approvalMessage.channel || approvalMessage.channel.id !== this.config.approvalChannel) {
+        if (!appMessage.channel || appMessage.channel.id !== this.config.approvalChannel) {
             return;
         }
 
@@ -112,20 +116,20 @@ export default class ApplicationApprovalListener {
             return;
         }
 
-        const approvalMessageId = approvalMessage.channel.id + ':' + approvalMessage.id;
+        const approvalMessageId = appMessage.channel.id + ':' + appMessage.id;
         const application       = await this.repo.findOne({approvalMessageId});
         if (!application) {
             this.logger.warn(
                 'Approval - Reaction: Found a message without an application: %j',
-                {id: approvalMessage.id, content: approvalMessage.content, embeds: approvalMessage.embeds[0].title},
+                {id: appMessage.id, content: appMessage.content, embeds: appMessage.embeds[0].title},
             );
 
             return;
         }
 
-        if (await this.updateApplication(approvalMessage, application)) {
+        if (await this.updateApplication(appMessage, application)) {
             const index = this.messages.findIndex((x) => (
-                x.approvalMessage.id === approvalMessage.id && x.application.id === application.id
+                x.approvalMessage.id === appMessage.id && x.application.id === application.id
             ));
 
             this.messages.splice(index, 1);
