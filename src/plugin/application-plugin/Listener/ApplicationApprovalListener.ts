@@ -100,8 +100,7 @@ export default class ApplicationApprovalListener {
         userId: string,
     ): Promise<void> {
         if (!appMessage || !appMessage.channel || !this.approvalChannel) {
-            this.logger.info('No appMessage, or this.approvalChannel in ApplicationApprovalListener');
-            await this.initialize();
+            return;
         }
 
         try {
