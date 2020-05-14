@@ -23,7 +23,7 @@ export default class ApplicationVoteListener {
         @inject(Types.application.config) private config: Config,
     ) {
         this.repo = connection.getRepository(Application);
-        client.once('ready', this.initialize.bind(this));
+        client.on('ready', this.initialize.bind(this));
         client.on('messageReactionAdd', this.onMessageReactionAdd.bind(this));
 
         setInterval(() => this.loadMessages(), 60 * 60 * 1000);
@@ -55,9 +55,7 @@ export default class ApplicationVoteListener {
         userId: string,
     ): Promise<void> {
         if (!voteMessage || !voteMessage.channel || !this.voteChannel) {
-            this.logger.info('No voteMessage, or this.voteChannel in ApplicationVoteListener');
-
-            await this.initialize().catch((e) => this.logger.error(e.message));
+            return;
         }
 
         try {

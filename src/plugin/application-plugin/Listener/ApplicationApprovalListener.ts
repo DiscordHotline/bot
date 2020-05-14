@@ -32,7 +32,7 @@ export default class ApplicationApprovalListener {
         @inject(Types.application.config) private config: Config,
     ) {
         this.repo = connection.getRepository(Application);
-        client.once('ready', this.initialize.bind(this));
+        client.on('ready', this.initialize.bind(this));
         client.on('messageCreate', this.onMessageCreate.bind(this));
         client.on('messageReactionAdd', this.onMessageReactionAdd.bind(this));
 
@@ -69,9 +69,7 @@ export default class ApplicationApprovalListener {
 
     private async onMessageCreate(appMessage: Message): Promise<void> {
         if (!appMessage.channel || !this.approvalChannel || appMessage.channel.id !== this.approvalChannel.id) {
-            this.logger.info('No appMessage, or this.approvalChannel in ApplicationApprovalListener');
-
-            await this.initialize().catch((e) => this.logger.error(e.message));
+            return;
         }
         setTimeout(
             async () => {
