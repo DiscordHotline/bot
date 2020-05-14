@@ -99,7 +99,7 @@ export default class ApplicationService {
         const embed: Embed = new Embed({
             title:       application.guild.name,
             description: application.reason,
-            timestamp:   application.approvedDate,
+            timestamp:   date.add(3, 'd').toDate(),
             author:      {
                 name:    `${requester.username}#${requester.discriminator}`,
                 iconUrl: `https://cdn.discordapp.com/avatars/${requester.id}/${requester.avatar}.png`,
