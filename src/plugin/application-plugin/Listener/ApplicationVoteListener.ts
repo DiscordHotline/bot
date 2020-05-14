@@ -143,7 +143,7 @@ export default class ApplicationVoteListener {
             const currentVotes = await this.appService.countVotes(application);
 
             if (!embed.fields[2]) {
-                embed.fields[2] = {name: 'Votes', inline: true};
+                embed.fields[2] = {name: 'Votes', inline: true, value: null};
             }
 
             embed.fields[2].value = Object.keys(currentVotes.entries).length.toString();

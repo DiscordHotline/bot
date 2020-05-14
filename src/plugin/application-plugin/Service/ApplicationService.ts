@@ -1,4 +1,12 @@
-import {Client, Invite as discordInvite, Message, MessageContent, TextableChannel, TextChannel} from 'eris';
+import {
+    ChannelInvite as discordInvite,
+    Client,
+    Message,
+    MessageContent,
+    RESTChannelInvite,
+    TextableChannel,
+    TextChannel,
+} from 'eris';
 import {types as CFTypes} from 'eris-command-framework';
 import Embed from 'eris-command-framework/Model/Embed';
 import {inject, injectable} from 'inversify';
@@ -77,7 +85,7 @@ export default class ApplicationService {
         }
 
         const requester = await this.restClient.getRESTUser(application.requestUser);
-        let invite: discordInvite;
+        let invite: RESTChannelInvite;
         try {
             invite = await this.getDiscordInvite(application.inviteCode);
         } catch (e) {
@@ -631,10 +639,10 @@ https://apply.hotline.gg/${invite.code}
         }
     }
 
-    private async getDiscordInvite(invite: string): Promise<discordInvite> {
+    private async getDiscordInvite(invite: string): Promise<RESTChannelInvite> {
         const inviteCode = invite.replace(/https:\/\/discord\.gg\//, '');
 
-        return this.client.getInvite(inviteCode, true);
+        return this.client.getInvite(inviteCode, true) as Promise<RESTChannelInvite>;
     }
 
     private async closeDiscussionChannel(application: Application): Promise<void> {

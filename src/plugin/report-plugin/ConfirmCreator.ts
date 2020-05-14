@@ -1,5 +1,5 @@
 import {AxiosInstance} from 'axios';
-import {Client, EmbedBase, Message} from 'eris';
+import {Client, EmbedOptions, Message} from 'eris';
 import {CommandContext} from 'eris-command-framework';
 import {injectable} from 'inversify';
 import {Connection, Repository} from 'typeorm';
@@ -34,7 +34,7 @@ export default class ConfirmCreator {
 
     public async updateConfirmMessage() {
         const issuer         = this.context.user;
-        let embed: EmbedBase = {
+        let embed: EmbedOptions = {
             color:       3447003,
             title:       `Confirm report ${this.report.id}`,
             description: 'On behalf of which server do you want to confirm this report?\n\n',

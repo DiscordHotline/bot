@@ -40,7 +40,7 @@ export default class extends AbstractPlugin {
     @Decorator.Permission('restart')
     public async RestartCommand(): Promise<void> {
         await this.reactOk();
-        await this.client.editStatus('dnd', {name: 'Restarting'});
+        await this.client.editStatus('dnd', {type: 0, name: 'Restarting'});
 
         setTimeout(
             () => {

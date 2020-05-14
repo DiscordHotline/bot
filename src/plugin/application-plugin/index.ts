@@ -1,5 +1,5 @@
 import * as eris from 'eris';
-import {Invite as discordInvite, Member, Role} from 'eris';
+import {Member, RESTChannelInvite, Role} from 'eris';
 import {AbstractPlugin} from 'eris-command-framework';
 import Decorator from 'eris-command-framework/Decorator';
 import {Container, inject, injectable} from 'inversify';
@@ -262,15 +262,15 @@ export default class Plugin extends AbstractPlugin {
 
         const repo = this.getRepository<Guild>(Guild);
         const re   = /(https?:\/\/)?(discord\.gg|discordapp\.com\/invite)\//;
-        let invite: discordInvite;
+        let invite: RESTChannelInvite;
 
         try {
-            invite = await this.client.getInvite(inviteUrl.replace(re, ''));
+            invite = <any> await this.client.getInvite(inviteUrl.replace(re, ''));
         } catch (error) {
             return this.reply('An issue occured while trying to fetch your invite. Make sure it\'s correct.');
         }
 
-        if (invite.temporary) {
+        if ((invite as any).temporary) {
             return this.reply('Your invite is not permanent.');
         }
 
