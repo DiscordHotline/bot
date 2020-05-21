@@ -162,15 +162,6 @@ export default class ApplicationVoteListener {
             } catch (e) {
                 this.logger.error(e);
             }
-        } else if (!reactions['👌']) {
-            this.logger.warn(
-                'Vote - Load: Found an expired application without result reactions, adding them: %j',
-                application,
-            );
-
-            await message.removeReactions();
-            await message.addReaction('👌');
-            await message.addReaction(passEmote);
         } else {
             try {
                 await this.removeExcessReactions('👌', message);
