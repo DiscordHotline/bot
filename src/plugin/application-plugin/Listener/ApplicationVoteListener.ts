@@ -107,14 +107,18 @@ export default class ApplicationVoteListener {
 
                 await this.updateApplication(message, application);
             } catch (e) {
-                this.logger.warn(
-                    'Vote - Load: Found an application without a message, creating message: %j',
-                    application,
-                );
-                const message = await this.appService.postApplicationMessage(application, false);
+                this.logger.error(`Unable to find application vote message: %j`, e);
 
-                application.voteMessageId = message.channel.id + ':' + message.id;
-                await application.save();
+                if (application.votePassed === ApprovalType.AWAITING) {
+                    this.logger.warn(
+                        'Vote - Load: Found an application without a message, creating message: %j',
+                        application,
+                    );
+                    const message = await this.appService.postApplicationMessage(application, false);
+
+                    application.voteMessageId = message.channel.id + ':' + message.id;
+                    await application.save();
+                }
             }
         }
     }
