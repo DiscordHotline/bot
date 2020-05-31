@@ -168,12 +168,20 @@ export default class ReportCreator extends EventEmitter {
                     const response = await this.api.post<interfaces.Report>('/report', this.report);
                     await msg.edit('Report Created. ID: ' + response.data.id);
                 } catch (e) {
-                    await msg.edit('There was an error creating the report. Try again later!');
-                    console.error(JSON.stringify(
-                        {response: e.response ? e.response.data : e, request: this.report},
-                        null,
-                        2,
-                    ));
+                    const errorResponse = e.response;
+                    switch (errorResponse.message) {
+                        case 'Matching report already exists.':
+                            await msg.edit(errorResponse.message);
+                            break;
+
+                        default:
+                            await msg.edit('There was an error creating the report. Try again later!');
+                            console.error(JSON.stringify(
+                                {response: e.response ? e.response.data : e, request: this.report},
+                                null,
+                                2,
+                            ));
+                    }
                 }
                 this.emit('close');
                 break;
