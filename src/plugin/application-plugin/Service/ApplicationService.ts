@@ -22,6 +22,15 @@ import HotlineInvite from '../Entity/Invite';
 import {Config} from '../index';
 import Types from '../types';
 
+const notableGuildFeatures = [
+    'VERIFIED',
+    'PARTNERED',
+    'COMMERCE',
+    'DISCOVERABLE',
+    'FEATURABLE',
+    'PUBLIC_DISABLE'
+];
+
 @injectable()
 export default class ApplicationService {
     private static makeId(length: number): string {
@@ -135,7 +144,7 @@ export default class ApplicationService {
 
         const votes = await this.countVotes(application);
 
-        const embed: Embed = new Embed({
+        let embedContent = {
             title:       application.guild.name,
             description: application.reason,
             timestamp:   date.add(3, 'd').toDate(),
@@ -159,7 +168,21 @@ export default class ApplicationService {
                 text: `Application ID: ${application.id} | Time Left: ${timeLeft}`,
             },
             color:       ApprovalColor[application.votePassed],
-        });
+        }
+
+        // Check for any notable guild features and add them to the embed if possible
+        if (invite) {
+            const guildFeatures = invite.guild.features.filter(feature => notableGuildFeatures.includes(feature));
+            if (guildFeatures.length > 0) {
+                embedContent.fields.unshift({
+                    name  : 'Notable guild features: ',
+                    value : guildFeatures.join(', '),
+                    inline: false
+                });
+            }
+        }
+
+        const embed: Embed = new Embed(embedContent);
 
         if (!edit) {
             const message = await this.client.createMessage(this.config.voteChannel, {embed: embed.serialize()});
@@ -578,7 +601,8 @@ https://apply.hotline.gg/${invite.code}
             // Create info message
             const requester          = await this.restClient.getRESTUser(application.requestUser);
             const invite             = await this.getDiscordInvite(application.inviteCode);
-            const informationMessage = await discussionChannel.createMessage({
+
+            let embedContent = {
                 embed: {
                     title:       application.guild.name,
                     description: application.reason,
@@ -598,8 +622,19 @@ https://apply.hotline.gg/${invite.code}
                         text: `Application ID: ${application.id}`,
                     },
                 },
-            });
+            }
 
+            // Check for any notable guild features and add them to the embed if possible
+            const guildFeatures = invite.guild.features.filter(feature => notableGuildFeatures.includes(feature));
+            if (guildFeatures.length > 0) {
+                embedContent.embed.fields.unshift({
+                    name  : 'Noteable guild features: ',
+                    value : guildFeatures.join(', '),
+                    inline: false
+                });
+            }
+
+            const informationMessage = await discussionChannel.createMessage(embedContent);
             await informationMessage.pin();
 
             return discussionChannel;
