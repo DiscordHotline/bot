@@ -156,11 +156,11 @@ export default class ApplicationVoteListener {
             const embed        = message.embeds[0];
             const currentVotes = await this.appService.countVotes(application);
 
-            if (!embed.fields[2]) {
-                embed.fields[2] = {name: 'Votes', inline: true, value: null};
+            if (!embed.fields[3]) {
+                embed.fields[3] = {name: 'Votes', inline: true, value: null};
             }
 
-            embed.fields[2].value = Object.keys(currentVotes.entries).length.toString();
+            embed.fields[3].value = Object.keys(currentVotes.entries).length.toString();
 
             try {
                 await message.edit({embed});
