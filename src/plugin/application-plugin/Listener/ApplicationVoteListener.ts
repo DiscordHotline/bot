@@ -107,6 +107,7 @@ export default class ApplicationVoteListener {
 
                 await this.updateApplication(message, application);
             } catch (e) {
+                console.error(e);
                 this.logger.error(`Unable to find application vote message: %j`, e);
 
                 if (application.votePassed === ApprovalType.AWAITING) {
