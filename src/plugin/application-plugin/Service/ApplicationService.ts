@@ -146,13 +146,13 @@ export default class ApplicationService {
 
         const votes = await this.countVotes(application);
 
-        let embedContent: Partial<Embed> = {
+        let embedContent: EmbedOptions = {
             title:       application.guild.name,
             description: application.reason,
             timestamp:   date.add(3, 'd').toDate(),
             author:      {
                 name:    `${requester.username}#${requester.discriminator}`,
-                iconUrl: `https://cdn.discordapp.com/avatars/${requester.id}/${requester.avatar}.png`,
+                icon_url: `https://cdn.discordapp.com/avatars/${requester.id}/${requester.avatar}.png`,
             },
             thumbnail:   {
                 url: `https://cdn.discordapp.com/icons/${invite.guild.id}/${invite.guild.icon}.webp`,
@@ -189,7 +189,7 @@ export default class ApplicationService {
         embedContent.fields.unshift(guildFeaturesField);
 
         if (!edit) {
-            const message = await this.client.createMessage(this.config.voteChannel, {embed: embedContent as EmbedOptions});
+            const message = await this.client.createMessage(this.config.voteChannel, {embed: embedContent});
             await message.addReaction('✅');
             await message.addReaction('❌');
 
