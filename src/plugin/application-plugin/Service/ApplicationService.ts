@@ -9,6 +9,7 @@ import {
 } from 'eris';
 import {types as CFTypes} from 'eris-command-framework';
 import Embed from 'eris-command-framework/Model/Embed';
+import EmbedField from 'eris-command-framework/Model/EmbedField';
 import {inject, injectable} from 'inversify';
 import * as millisec from 'millisec';
 import * as moment from 'moment';
@@ -144,7 +145,7 @@ export default class ApplicationService {
 
         const votes = await this.countVotes(application);
 
-        let embedContent = {
+        let embedContent: Partial<Embed> = {
             title:       application.guild.name,
             description: application.reason,
             timestamp:   date.add(3, 'd').toDate(),
@@ -171,16 +172,20 @@ export default class ApplicationService {
         };
 
         // Check for any notable guild features and add them to the embed if possible
+        let guildFeaturesField: EmbedField = {
+            name  : 'Notable guild features: ',
+            value : 'None',
+            inline: false,
+        };
+
         if (invite) {
             const guildFeatures = invite.guild.features.filter((feature) => notableGuildFeatures.includes(feature));
             if (guildFeatures.length > 0) {
-                embedContent.fields.unshift({
-                    name  : 'Notable guild features: ',
-                    value : guildFeatures.join(', '),
-                    inline: false,
-                });
+                guildFeaturesField.value = guildFeatures.join(', ');
             }
         }
+
+        embedContent.fields.unshift(guildFeaturesField);
 
         const embed: Embed = new Embed(embedContent);
 
