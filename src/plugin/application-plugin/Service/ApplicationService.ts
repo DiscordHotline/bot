@@ -1,12 +1,12 @@
 import {
     ChannelInvite as discordInvite,
     Client,
+    EmbedOptions,
     Message,
     MessageContent,
     RESTChannelInvite,
     TextableChannel,
     TextChannel,
-    EmbedOptions,
 } from 'eris';
 import {types as CFTypes} from 'eris-command-framework';
 import Embed from 'eris-command-framework/Model/Embed';
