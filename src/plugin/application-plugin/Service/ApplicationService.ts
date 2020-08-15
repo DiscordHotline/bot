@@ -200,7 +200,7 @@ export default class ApplicationService {
             const [channelId, messageId] = application.voteMessageId.split(':');
             const message                = await this.client.getMessage(channelId, messageId);
 
-            await message.edit({embed: embed.serialize()});
+            await message.edit({embed: embedContent});
             await message.addReaction('✅');
             await message.addReaction('❌');
 
