@@ -6,6 +6,7 @@ import {
     RESTChannelInvite,
     TextableChannel,
     TextChannel,
+    EmbedOptions,
 } from 'eris';
 import {types as CFTypes} from 'eris-command-framework';
 import Embed from 'eris-command-framework/Model/Embed';
@@ -187,10 +188,8 @@ export default class ApplicationService {
 
         embedContent.fields.unshift(guildFeaturesField);
 
-        const embed: Embed = new Embed(embedContent);
-
         if (!edit) {
-            const message = await this.client.createMessage(this.config.voteChannel, {embed: embed.serialize()});
+            const message = await this.client.createMessage(this.config.voteChannel, {embed: embedContent as EmbedOptions});
             await message.addReaction('✅');
             await message.addReaction('❌');
 
