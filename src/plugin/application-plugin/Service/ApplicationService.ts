@@ -28,7 +28,7 @@ const notableGuildFeatures = [
     'COMMERCE',
     'DISCOVERABLE',
     'FEATURABLE',
-    'PUBLIC_DISABLE'
+    'PUBLIC_DISABLE',
 ];
 
 @injectable()
@@ -168,16 +168,16 @@ export default class ApplicationService {
                 text: `Application ID: ${application.id} | Time Left: ${timeLeft}`,
             },
             color:       ApprovalColor[application.votePassed],
-        }
+        };
 
         // Check for any notable guild features and add them to the embed if possible
         if (invite) {
-            const guildFeatures = invite.guild.features.filter(feature => notableGuildFeatures.includes(feature));
+            const guildFeatures = invite.guild.features.filter((feature) => notableGuildFeatures.includes(feature));
             if (guildFeatures.length > 0) {
                 embedContent.fields.unshift({
                     name  : 'Notable guild features: ',
                     value : guildFeatures.join(', '),
-                    inline: false
+                    inline: false,
                 });
             }
         }
@@ -622,15 +622,15 @@ https://apply.hotline.gg/${invite.code}
                         text: `Application ID: ${application.id}`,
                     },
                 },
-            }
+            };
 
             // Check for any notable guild features and add them to the embed if possible
-            const guildFeatures = invite.guild.features.filter(feature => notableGuildFeatures.includes(feature));
+            const guildFeatures = invite.guild.features.filter((feature) => notableGuildFeatures.includes(feature));
             if (guildFeatures.length > 0) {
                 embedContent.embed.fields.unshift({
                     name  : 'Noteable guild features: ',
                     value : guildFeatures.join(', '),
-                    inline: false
+                    inline: false,
                 });
             }
 
