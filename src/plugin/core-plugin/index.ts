@@ -324,7 +324,7 @@ export default class extends AbstractPlugin {
                 },
             );
         };
-        this.client.on('messageCreate', repl);
+        this.client.on('messageCreate', repl as any);
     }
 
     @Decorator.Command('permnodes', 'Lists all permission nodes')

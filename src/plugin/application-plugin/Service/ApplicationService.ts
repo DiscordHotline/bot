@@ -1,9 +1,8 @@
 import {
-    ChannelInvite as discordInvite,
+    Invite as discordInvite,
     Client,
     Message,
     MessageContent,
-    RESTChannelInvite,
     TextableChannel,
     TextChannel,
 } from 'eris';
@@ -74,7 +73,7 @@ export default class ApplicationService {
 
     public async postApprovalMessage(application: Application): Promise<Message> {
         const requester = await this.restClient.getRESTUser(application.requestUser);
-        let invite: RESTChannelInvite;
+        let invite: discordInvite;
         try {
             invite = await this.getDiscordInvite(application.inviteCode);
         } catch (e) {
@@ -124,7 +123,7 @@ export default class ApplicationService {
         }
 
         const requester = await this.restClient.getRESTUser(application.requestUser);
-        let invite: RESTChannelInvite;
+        let invite: discordInvite;
         try {
             invite = await this.getDiscordInvite(application.inviteCode);
         } catch (e) {
@@ -474,7 +473,7 @@ https://apply.hotline.gg/${invite.code}
     }
 
     public async getVotes(message: Message, deleteReaction: boolean = false): Promise<VoteResults> {
-        const reactions          = message.reactions;
+        const reactions: any     = message.reactions;
         const votes: VoteResults = {
             approvals: reactions['✅'].count - (reactions['✅'].me ? 1 : 0),
             denies:    reactions['❌'].count - (reactions['❌'].me ? 1 : 0),
@@ -678,10 +677,10 @@ https://apply.hotline.gg/${invite.code}
         }
     }
 
-    private async getDiscordInvite(invite: string): Promise<RESTChannelInvite> {
+    private async getDiscordInvite(invite: string): Promise<discordInvite> {
         const inviteCode = invite.replace(/https:\/\/discord\.gg\//, '');
 
-        return this.client.getInvite(inviteCode, true) as Promise<RESTChannelInvite>;
+        return this.client.getInvite(inviteCode, true);
     }
 
     private async closeDiscussionChannel(application: Application): Promise<void> {

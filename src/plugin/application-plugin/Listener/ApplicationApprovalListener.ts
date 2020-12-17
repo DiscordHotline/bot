@@ -181,7 +181,7 @@ export default class ApplicationApprovalListener {
                 return false;
             }
 
-            const stats = reactions[name];
+            const stats: any = reactions[name];
             if (name === '✅' && stats.count > (stats.me ? 1 : 0)) {
                 approved = ApprovalType.APPROVED;
             }

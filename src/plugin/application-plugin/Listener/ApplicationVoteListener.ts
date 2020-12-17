@@ -182,7 +182,7 @@ export default class ApplicationVoteListener {
     }
 
     private async removeExcessReactions(emote: string, message: Message) {
-        const reactionCounts = message.reactions;
+        const reactionCounts: any = message.reactions;
 
         if (reactionCounts[emote].count > 1) {
             const allReactions = await this.client.getMessageReaction(message.channel.id, message.id, emote);

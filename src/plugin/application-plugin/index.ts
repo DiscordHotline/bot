@@ -1,5 +1,5 @@
 import * as eris from 'eris';
-import {Member, RESTChannelInvite, Role} from 'eris';
+import {Member, Invite, Role} from 'eris';
 import {AbstractPlugin} from 'eris-command-framework';
 import Decorator from 'eris-command-framework/Decorator';
 import {Container, inject, injectable} from 'inversify';
@@ -262,7 +262,7 @@ export default class Plugin extends AbstractPlugin {
 
         const repo = this.getRepository<Guild>(Guild);
         const re   = /(https?:\/\/)?(discord\.gg|discordapp\.com\/invite)\//;
-        let invite: RESTChannelInvite;
+        let invite: Invite;
 
         try {
             invite = <any> await this.client.getInvite(inviteUrl.replace(re, ''));
