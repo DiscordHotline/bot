@@ -57,6 +57,7 @@ export default class Plugin extends AbstractPlugin {
 
       if (!commands[data.data.name]) {
         await axios.post(`https://discord.com/api/v8/interactions/${data.id}/${data.token}/callback`, { type: 5 });
+
         return console.error('Invalid command');
       }
 

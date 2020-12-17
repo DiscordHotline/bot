@@ -52,6 +52,7 @@ export default class ColorCommand extends AbstractCommand<'color'> {
   public async process(interaction) {
     if (!interaction.member.roles.includes(CommandPlugin.memberRoleId)) {
       await this.acknowledge(interaction, 2);
+
       return;
     }
 
@@ -68,17 +69,18 @@ export default class ColorCommand extends AbstractCommand<'color'> {
   }
 
   private async joinColor(interaction: InteractionCreate, subCommand: [{ name: 'role'; value: string }]) {
-    const guild = this.client.guilds.get(interaction.guild_id);
+    const guild       = this.client.guilds.get(interaction.guild_id);
     const dividerRole = guild.roles.get(CommandPlugin.roleSeparatorId);
-    const role = guild.roles.get(subCommand[0].value);
+    const role        = guild.roles.get(subCommand[0].value);
 
     if (interaction.member.roles.includes(role.id) || dividerRole.position < role.position) {
       await this.acknowledge(interaction, 2);
+
       return;
     }
 
     await this.leaveOtherRoles(guild, interaction.member, role);
-    await guild.addMemberRole(interaction.member.user.id, role.id, 'Joining role color')
+    await guild.addMemberRole(interaction.member.user.id, role.id, 'Joining role color');
     await this.acknowledge(interaction, 5);
   }
 
@@ -86,17 +88,17 @@ export default class ColorCommand extends AbstractCommand<'color'> {
     interaction: InteractionCreate,
     subCommand: [{ name: 'name'; value: string }, { name: 'color'; value: string }],
   ) {
-    const guild = this.client.guilds.get(interaction.guild_id);
+    const guild       = this.client.guilds.get(interaction.guild_id);
     const dividerRole = guild.roles.get(CommandPlugin.roleSeparatorId);
     const newPosition = dividerRole.position - 1;
-    const role = await guild.createRole({
-      name: subCommand[0].value,
-      color: parseInt(subCommand[1].value.replace(/^#/, ''), 16),
+    const role        = await guild.createRole({
+      name:        subCommand[0].value,
+      color:       parseInt(subCommand[1].value.replace(/^#/, ''), 16),
       permissions: 0,
-      hoist: false,
+      hoist:       false,
       mentionable: false,
-      position: newPosition,
-    }, 'Creating role color');
+      position:    newPosition,
+    },                                         'Creating role color');
     await this.leaveOtherRoles(guild, interaction.member, role);
     await guild.addMemberRole(interaction.member.user.id, role.id, 'Joining role color');
 

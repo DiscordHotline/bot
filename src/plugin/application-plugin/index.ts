@@ -1,5 +1,5 @@
 import * as eris from 'eris';
-import {Member, Invite, Role} from 'eris';
+import {Invite, Member, Role} from 'eris';
 import {AbstractPlugin} from 'eris-command-framework';
 import Decorator from 'eris-command-framework/Decorator';
 import {Container, inject, injectable} from 'inversify';

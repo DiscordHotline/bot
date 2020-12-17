@@ -1,13 +1,16 @@
 import axios from 'axios';
 import { AllowedMentions, Client, Embed } from 'eris';
 import { InteractionCreate } from '../index';
+
 const { pluginConfigs: { CommandPlugin } } = require('../../../../package.json');
 
-export default abstract class AbstractCommand<N extends string, O extends { name: string; value: any } = { name: string; value: any }> {
-  public abstract get schema();
-
+export default abstract class AbstractCommand<
+  N extends string,
+  O extends { name: string; value: any } = { name: string; value: any }> {
   public constructor(protected client: Client) {
   }
+
+  public abstract get schema();
 
   public async register() {
     const requestHandler: any = (this.client as any).requestHandler;

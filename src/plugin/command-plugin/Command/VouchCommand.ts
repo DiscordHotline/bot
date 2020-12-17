@@ -5,6 +5,7 @@ import AbstractCommand from './AbstractCommand';
 
 const { pluginConfigs: { CommandPlugin } } = require('../../../../package.json');
 
+type InteractionType = { name: 'vouch'; id: string; options: Array<{ name: 'user' | 'reason', value: string }> };
 export default class VouchCommand extends AbstractCommand<'vouch', { name: 'user' | 'reason', value: string }> {
   public static Name = 'vouch';
   public get schema() {
@@ -29,9 +30,10 @@ export default class VouchCommand extends AbstractCommand<'vouch', { name: 'user
     };
   }
 
-  public async process(interaction: InteractionCreate<{ name: 'vouch'; id: string; options: { name: 'user' | 'reason', value: string }[] }>) {
+  public async process(interaction: InteractionCreate<InteractionType>) {
     if (!interaction.member.roles.includes(CommandPlugin.memberRoleId)) {
       await this.acknowledge(interaction, 2);
+
       return;
     }
 
@@ -43,6 +45,8 @@ export default class VouchCommand extends AbstractCommand<'vouch', { name: 'user
     const user   = guild.members.get(userId);
     if (user.roles.includes(CommandPlugin.memberRoleId)) {
       await this.acknowledge(interaction, 4, { content: `<@${user.id}> is already a member!.` });
+
+      return;
     }
 
     const repo = getRepository(Vouch);
