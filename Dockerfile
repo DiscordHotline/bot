@@ -11,7 +11,7 @@ RUN apk add --update git
 CMD npm run $SCRIPT
 WORKDIR /app
 
-COPY package.json yark.lock /app/
+COPY package.json yarn.lock /app/
 RUN if [[ "$ENVIRONMENT" = "prod" ]]; then yarn ; fi
 
 COPY . /app/
