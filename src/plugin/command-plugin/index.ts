@@ -61,8 +61,15 @@ export default class Plugin extends AbstractPlugin {
         return console.error('Invalid command');
       }
 
-      await commands[data.data.name].process(data);
+      try {
+        await commands[data.data.name].process(data);
+      } catch (e) {
+        console.error('Error with command', data, e);
+        await axios.post(
+          `https://discord.com/api/v8/interactions/${data.id}/${data.token}/callback`,
+          { type: 4, data: { content: 'There was an error running your command' } },
+        );
+      }
     });
   }
-
 };
