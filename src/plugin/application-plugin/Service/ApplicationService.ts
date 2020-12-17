@@ -1,6 +1,7 @@
 import {
     Invite as discordInvite,
     Client,
+    EmbedOptions,
     Message,
     MessageContent,
     TextableChannel,
@@ -8,6 +9,7 @@ import {
 } from 'eris';
 import {types as CFTypes} from 'eris-command-framework';
 import Embed from 'eris-command-framework/Model/Embed';
+import EmbedField from 'eris-command-framework/Model/EmbedField';
 import {inject, injectable} from 'inversify';
 import * as millisec from 'millisec';
 import * as moment from 'moment';
@@ -20,6 +22,15 @@ import Guild from '../Entity/Guild';
 import HotlineInvite from '../Entity/Invite';
 import {Config} from '../index';
 import Types from '../types';
+
+const notableGuildFeatures = [
+    'VERIFIED',
+    'PARTNERED',
+    'COMMERCE',
+    'DISCOVERABLE',
+    'FEATURABLE',
+    'PUBLIC_DISABLE',
+];
 
 @injectable()
 export default class ApplicationService {
@@ -134,13 +145,13 @@ export default class ApplicationService {
 
         const votes = await this.countVotes(application);
 
-        const embed: Embed = new Embed({
+        let embedContent: EmbedOptions = {
             title:       application.guild.name,
             description: application.reason,
             timestamp:   date.add(3, 'd').toDate(),
             author:      {
                 name:    `${requester.username}#${requester.discriminator}`,
-                iconUrl: `https://cdn.discordapp.com/avatars/${requester.id}/${requester.avatar}.png`,
+                icon_url: `https://cdn.discordapp.com/avatars/${requester.id}/${requester.avatar}.png`,
             },
             thumbnail:   {
                 url: `https://cdn.discordapp.com/icons/${invite.guild.id}/${invite.guild.icon}.webp`,
@@ -158,10 +169,26 @@ export default class ApplicationService {
                 text: `Application ID: ${application.id} | Time Left: ${timeLeft}`,
             },
             color:       ApprovalColor[application.votePassed],
-        });
+        };
+
+        // Check for any notable guild features and add them to the embed if possible
+        let guildFeaturesField: EmbedField = {
+            name  : 'Notable guild features: ',
+            value : 'None',
+            inline: false,
+        };
+
+        if (invite) {
+            const guildFeatures = invite.guild.features.filter((feature) => notableGuildFeatures.includes(feature));
+            if (guildFeatures.length > 0) {
+                guildFeaturesField.value = guildFeatures.join(', ');
+            }
+        }
+
+        embedContent.fields.unshift(guildFeaturesField);
 
         if (!edit) {
-            const message = await this.client.createMessage(this.config.voteChannel, {embed: embed.serialize()});
+            const message = await this.client.createMessage(this.config.voteChannel, {embed: embedContent});
             await message.addReaction('✅');
             await message.addReaction('❌');
 
@@ -172,7 +199,7 @@ export default class ApplicationService {
             const [channelId, messageId] = application.voteMessageId.split(':');
             const message                = await this.client.getMessage(channelId, messageId);
 
-            await message.edit({embed: embed.serialize()});
+            await message.edit({embed: embedContent});
             await message.addReaction('✅');
             await message.addReaction('❌');
 
@@ -577,7 +604,8 @@ https://apply.hotline.gg/${invite.code}
             // Create info message
             const requester          = await this.restClient.getRESTUser(application.requestUser);
             const invite             = await this.getDiscordInvite(application.inviteCode);
-            const informationMessage = await discussionChannel.createMessage({
+
+            let embedContent = {
                 embed: {
                     title:       application.guild.name,
                     description: application.reason,
@@ -597,8 +625,19 @@ https://apply.hotline.gg/${invite.code}
                         text: `Application ID: ${application.id}`,
                     },
                 },
-            });
+            };
 
+            // Check for any notable guild features and add them to the embed if possible
+            const guildFeatures = invite.guild.features.filter((feature) => notableGuildFeatures.includes(feature));
+            if (guildFeatures.length > 0) {
+                embedContent.embed.fields.unshift({
+                    name  : 'Noteable guild features: ',
+                    value : guildFeatures.join(', '),
+                    inline: false,
+                });
+            }
+
+            const informationMessage = await discussionChannel.createMessage(embedContent);
             await informationMessage.pin();
 
             return discussionChannel;

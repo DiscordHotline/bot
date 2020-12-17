@@ -107,14 +107,19 @@ export default class ApplicationVoteListener {
 
                 await this.updateApplication(message, application);
             } catch (e) {
-                this.logger.warn(
-                    'Vote - Load: Found an application without a message, creating message: %j',
-                    application,
-                );
-                const message = await this.appService.postApplicationMessage(application, false);
+                console.error(e);
+                this.logger.error(`Unable to find application vote message: %j`, e);
 
-                application.voteMessageId = message.channel.id + ':' + message.id;
-                await application.save();
+                if (application.votePassed === ApprovalType.AWAITING) {
+                    this.logger.warn(
+                        'Vote - Load: Found an application without a message, creating message: %j',
+                        application,
+                    );
+                    const message = await this.appService.postApplicationMessage(application, false);
+
+                    application.voteMessageId = message.channel.id + ':' + message.id;
+                    await application.save();
+                }
             }
         }
     }
@@ -151,26 +156,17 @@ export default class ApplicationVoteListener {
             const embed        = message.embeds[0];
             const currentVotes = await this.appService.countVotes(application);
 
-            if (!embed.fields[2]) {
-                embed.fields[2] = {name: 'Votes', inline: true, value: null};
+            if (!embed.fields[3]) {
+                embed.fields[3] = {name: 'Votes', inline: true, value: null};
             }
 
-            embed.fields[2].value = Object.keys(currentVotes.entries).length.toString();
+            embed.fields[3].value = Object.keys(currentVotes.entries).length.toString();
 
             try {
                 await message.edit({embed});
             } catch (e) {
                 this.logger.error(e);
             }
-        } else if (!reactions['👌']) {
-            this.logger.warn(
-                'Vote - Load: Found an expired application without result reactions, adding them: %j',
-                application,
-            );
-
-            await message.removeReactions();
-            await message.addReaction('👌');
-            await message.addReaction(passEmote);
         } else {
             try {
                 await this.removeExcessReactions('👌', message);

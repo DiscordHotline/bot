@@ -145,7 +145,7 @@ export default class ConfirmCreator {
             });
 
             return textChannel.createMessage(
-                `${userMention} you have now confirmed report ${this.report.id} on behalf of <@&${guild.roleId}>.`,
+                `${userMention} you have now confirmed report ${this.report.id} on behalf of ${guild.name}.`,
             );
         } catch (e) {
             if (e.response && e.response.data && e.response.data.message === 'report already confirmed') {

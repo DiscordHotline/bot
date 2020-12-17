@@ -216,7 +216,7 @@ export default class ReportPlugin extends AbstractPlugin {
                 body = {tags: newTags};
                 break;
             case 'links':
-                const links = value.toString().split(' ').filter((x) => x.length > 1);
+                const links = value.toString().replace(/[\r\n]/g, ' ').split(' ').filter((x) => x.length > 1);
                 if (!links || links.length === 0) {
                     return message.edit('Those don\'t look like valid links.');
                 }
