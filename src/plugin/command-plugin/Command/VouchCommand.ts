@@ -8,6 +8,7 @@ const { pluginConfigs: { CommandPlugin } } = require('../../../../package.json')
 type InteractionType = { name: 'vouch'; id: string; options: Array<{ name: 'user' | 'reason', value: string }> };
 export default class VouchCommand extends AbstractCommand<'vouch', { name: 'user' | 'reason', value: string }> {
   public static Name = 'vouch';
+
   public get schema() {
     return {
       guild:       CommandPlugin.hotlineGuildId,
@@ -39,6 +40,18 @@ export default class VouchCommand extends AbstractCommand<'vouch', { name: 'user
 
     const guild = this.client.guilds.get(interaction.guild_id);
     await guild.fetchAllMembers();
+    const member      = guild.members.get(interaction.member.user.id);
+    const today       = new Date();
+    const last3Months = new Date(today.setMonth(today.getMonth() - 3)).getTime();
+    if (member.joinedAt > last3Months) {
+      await this.acknowledge(
+        interaction,
+        4,
+        { content: `You haven't been here long enough. Please wait until you've been here 3 months.` },
+      );
+
+      return;
+    }
 
     const userId = interaction.data.options.find((x) => x.name === 'user').value;
     const reason = interaction.data.options.find((x) => x.name === 'reason').value;
@@ -49,12 +62,12 @@ export default class VouchCommand extends AbstractCommand<'vouch', { name: 'user
       return;
     }
 
-    const repo = getRepository(Vouch);
-    const vouch = repo.create();
-    vouch.voucher = interaction.member.user.id;
-    vouch.vouchee = userId;
+    const repo        = getRepository(Vouch);
+    const vouch       = repo.create();
+    vouch.voucher     = interaction.member.user.id;
+    vouch.vouchee     = userId;
     vouch.description = reason;
-    vouch.insertDate = new Date();
+    vouch.insertDate  = new Date();
     await vouch.save();
 
     await guild.addMemberRole(
