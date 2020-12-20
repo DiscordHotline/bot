@@ -47,7 +47,7 @@ export default class VouchCommand extends AbstractCommand<'vouch', { name: 'user
       await this.acknowledge(
         interaction,
         4,
-        { content: `You haven't been here long enough. Please wait until you've been here 3 months.` },
+        { content: `You haven't been here long enough. Please wait until you've been here 3 months.`, flags: 64 },
       );
 
       return;
@@ -57,7 +57,7 @@ export default class VouchCommand extends AbstractCommand<'vouch', { name: 'user
     const reason = interaction.data.options.find((x) => x.name === 'reason').value;
     const user   = guild.members.get(userId);
     if (user.roles.includes(CommandPlugin.memberRoleId)) {
-      await this.acknowledge(interaction, 4, { content: `<@${user.id}> is already a member!` });
+      await this.acknowledge(interaction, 4, { content: `<@${user.id}> is already a member!`, flags: 64 });
 
       return;
     }
@@ -79,7 +79,7 @@ export default class VouchCommand extends AbstractCommand<'vouch', { name: 'user
     await this.acknowledge(
       interaction,
       4,
-      { content: `Thank you <@${interaction.member.user.id}> for vouching for <@${user.id}>.` },
+      { content: `Thank you <@${interaction.member.user.id}> for vouching for <@${user.id}>.`, flags: 64 },
     );
   }
 }

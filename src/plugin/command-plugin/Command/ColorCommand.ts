@@ -81,7 +81,7 @@ export default class ColorCommand extends AbstractCommand<'color'> {
 
     await this.leaveOtherRoles(guild, interaction.member, role);
     await guild.addMemberRole(interaction.member.user.id, role.id, 'Joining role color');
-    await this.acknowledge(interaction, 5);
+    await this.acknowledge(interaction, 5, {content: 'Role created', flags: 64});
   }
 
   private async createColor(
@@ -102,7 +102,7 @@ export default class ColorCommand extends AbstractCommand<'color'> {
     await this.leaveOtherRoles(guild, interaction.member, role);
     await guild.addMemberRole(interaction.member.user.id, role.id, 'Joining role color');
 
-    await this.acknowledge(interaction, 5);
+    await this.acknowledge(interaction, 5, {content: 'Role join', flags: 64});
   }
 
   private async leaveOtherRoles(guild: Guild, member: Member, safeRole: Role) {
