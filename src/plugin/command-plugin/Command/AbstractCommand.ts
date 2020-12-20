@@ -32,7 +32,7 @@ export default abstract class AbstractCommand<
   public async acknowledge(
     { id, token }: InteractionCreate,
     type: number,
-    data?: { tts?: boolean; content: string; embeds?: Embed[]; allowed_mentions?: AllowedMentions },
+    data?: { tts?: boolean; content: string; embeds?: Embed[]; allowed_mentions?: AllowedMentions; flags?: number },
   ) {
     await axios.post(`https://discord.com/api/v8/interactions/${id}/${token}/callback`, { type, data });
   }
