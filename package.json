@@ -33,7 +33,7 @@
         "@secretary/aws-secrets-manager-adapter": "^3.0.1",
         "@secretary/core": "^3.0.1",
         "aws-sdk": "^2.812.0",
-        "axios": "^0.21.0",
+        "axios": "^0.21.1",
         "body-parser": "^1.19.0",
         "compression": "^1.7.4",
         "dotenv": "^8.2.0",
