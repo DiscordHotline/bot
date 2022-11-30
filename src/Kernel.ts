@@ -1,7 +1,7 @@
 import {Adapter} from '@secretary/aws-secrets-manager-adapter';
 import {Manager} from '@secretary/core';
 import {Adapter as JsonAdapter} from '@secretary/json-file-adapter';
-import {Client, ClientOptions} from 'eris';
+import Eris, {Client, ClientOptions} from 'eris';
 import {
     AbstractPlugin,
     CommandContext,
@@ -12,11 +12,12 @@ import {
 import * as express from 'express';
 import {Express} from 'express';
 import {existsSync} from 'fs';
+// @ts-ignore
 import * as hookcord from 'hookcord';
 import {Container} from 'inversify';
 import {resolve} from 'path';
 import {Connection, createConnection} from 'typeorm';
-import {createLogger, format, Logger, transports} from 'winston';
+import {createLogger, format, Logger, LoggerOptions, transports} from 'winston';
 
 import Types from './types';
 import SecretsManager = require('aws-sdk/clients/secretsmanager');
@@ -42,7 +43,7 @@ export default class Kernel {
             transports: [
                 new transports.Console(),
             ],
-        });
+        } as LoggerOptions);
     }
 
     public async run(): Promise<void> {
@@ -142,7 +143,9 @@ export default class Kernel {
         // Discord client
         const {value: {token}} = await this.secrets.getSecret<{token: string}>('hotline/discord');
         this.container.bind<string>(Types.discord.token).toConstantValue(token);
-        this.container.bind<ClientOptions>(Types.discord.options).toConstantValue({});
+        this.container.bind<ClientOptions>(Types.discord.options).toConstantValue(
+          {intents: Eris.Constants.Intents.allNonPrivileged},
+        );
         this.container.bind<Client>(Types.discord.client).toDynamicValue((ctx) => {
             return new Client(
                 ctx.container.get<string>(Types.discord.token),

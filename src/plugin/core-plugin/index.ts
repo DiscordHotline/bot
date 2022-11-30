@@ -352,7 +352,7 @@ export default class extends AbstractPlugin {
     @Decorator.Permission('Owner')
     public async ListPermissionsCommand(): Promise<void> {
         const perms: Permission[] = (await this.getRepository<Permission>(Permission)
-            .find({guildId: this.context.guild.id}))
+            .find({where: {guildId: this.context.guild.id}}))
             .sort((a, b) => a.typeId > b.typeId ? 1 : -1);
 
         if (perms.length === 0) {
@@ -415,12 +415,12 @@ export default class extends AbstractPlugin {
     @Decorator.Types({user: Member})
     public async DeleteMemberPermission(user: Member, node: string): Promise<void> {
         const perm: Permission = await this.getRepository<Permission>(Permission).findOne(
-            {
+          {where: {
                 guildId: this.context.guild.id,
                 type:    PermissionType.User,
                 typeId:  user.id,
                 node,
-            },
+            }},
         );
 
         if (perm) {
@@ -436,12 +436,12 @@ export default class extends AbstractPlugin {
     @Decorator.Types({role: Role})
     public async DeleteRolePermission(role: Role, node: string): Promise<void> {
         const perm: Permission = await this.getRepository<Permission>(Permission).findOne(
-            {
+          {where: {
                 guildId: this.context.guild.id,
                 type:    PermissionType.Role,
                 typeId:  role.id,
                 node,
-            },
+            }},
         );
 
         if (perm) {
@@ -456,12 +456,12 @@ export default class extends AbstractPlugin {
         type: PermissionType, id: string, node: string, allowed: boolean,
     ): Promise<void> {
         let perm: Permission = await this.getRepository<Permission>(Permission).findOne(
-            {
+          {where: {
                 guildId: this.context.guild.id,
                 typeId:  id,
                 type,
                 node,
-            },
+            }},
         );
 
         if (!perm) {

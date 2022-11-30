@@ -1,4 +1,4 @@
-import { Guild, Member, Role } from 'eris';
+import {Guild, Member, Role, RoleOptions} from 'eris';
 import { InteractionCreate } from '../index';
 import AbstractCommand from './AbstractCommand';
 
@@ -98,7 +98,7 @@ export default class ColorCommand extends AbstractCommand<'color'> {
       hoist:       false,
       mentionable: false,
       position:    newPosition,
-    },                                         'Creating role color');
+    } as RoleOptions,                          'Creating role color');
     await this.leaveOtherRoles(guild, interaction.member, role);
     await guild.addMemberRole(interaction.member.user.id, role.id, 'Joining role color');
 
