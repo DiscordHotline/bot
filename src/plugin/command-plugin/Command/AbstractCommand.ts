@@ -22,7 +22,7 @@ export default abstract class AbstractCommand<
     requestHandler.baseUrl    = '/api/v10';
     this.logger.info('Registering command: ' + this.schema.name);
 
-    let url = `/applications/${CommandPlugin.applicationId}/guilds/${CommandPlugin.hotlineGuildId}`;
+    let url = `/applications/${CommandPlugin.applicationId}`;
     if (this.guildId) {
       url += `/guilds/${this.guildId}`;
     }
