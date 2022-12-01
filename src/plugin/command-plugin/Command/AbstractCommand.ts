@@ -24,7 +24,7 @@ export default abstract class AbstractCommand<
 
     let url = `/applications/${CommandPlugin.applicationId}/guilds/${CommandPlugin.hotlineGuildId}`;
     if (this.guildId) {
-      url += `/guilds/${this.guildId}`
+      url += `/guilds/${this.guildId}`;
     }
 
     await requestHandler.request(
