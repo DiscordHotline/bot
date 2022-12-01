@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { AllowedMentions, Client, Embed } from 'eris';
+import {Logger} from 'winston';
 import { InteractionCreate } from '../index';
 
 const { pluginConfigs: { CommandPlugin } } = require('../../../../package.json');
@@ -7,19 +8,28 @@ const { pluginConfigs: { CommandPlugin } } = require('../../../../package.json')
 export default abstract class AbstractCommand<
   N extends string,
   O extends { name: string; value: any } = { name: string; value: any }> {
-  public constructor(protected client: Client) {
+  public constructor(protected client: Client, protected logger: Logger) {
   }
 
   public abstract get schema();
+  public get guildId(): string | null {
+    return null;
+  }
 
   public async register() {
     const requestHandler: any = (this.client as any).requestHandler;
     const original            = requestHandler.baseUrl;
-    requestHandler.baseUrl    = '/api/v8';
+    requestHandler.baseUrl    = '/api/v10';
+    this.logger.info('Registering command: ' + this.schema.name);
+
+    let url = `/applications/${CommandPlugin.applicationId}/guilds/${CommandPlugin.hotlineGuildId}`;
+    if (this.guildId) {
+      url += `/guilds/${this.guildId}`
+    }
 
     await requestHandler.request(
       'POST',
-      `/applications/${CommandPlugin.applicationId}/guilds/${CommandPlugin.hotlineGuildId}/commands`,
+      `${url}/commands`,
       true,
       this.schema,
     );

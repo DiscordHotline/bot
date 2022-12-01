@@ -9,10 +9,14 @@ type InteractionType = { name: 'vouch'; id: string; options: Array<{ name: 'user
 export default class VouchCommand extends AbstractCommand<'vouch', { name: 'user' | 'reason', value: string }> {
   public static Name = 'vouch';
 
+  public get guildId() {
+    return CommandPlugin.hotlineGuildId;
+  }
+
   public get schema() {
     return {
-      guild:       CommandPlugin.hotlineGuildId,
       name:        VouchCommand.Name,
+      type:        1,
       description: 'Vouch for a user\'s acceptance into hotline',
       options:     [
         {

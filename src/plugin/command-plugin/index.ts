@@ -41,8 +41,8 @@ export default class Plugin extends AbstractPlugin {
   public async initialize(): Promise<void> {
     this.logger.info('Initializing CommandPlugin');
     const commands = {
-      [VouchCommand.Name]: new VouchCommand(this.client),
-      [ColorCommand.Name]: new ColorCommand(this.client),
+      [VouchCommand.Name]: new VouchCommand(this.client, this.logger),
+      [ColorCommand.Name]: new ColorCommand(this.client, this.logger),
     };
 
     this.client.on('ready', async () => {

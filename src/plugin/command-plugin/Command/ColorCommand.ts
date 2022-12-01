@@ -7,9 +7,12 @@ const { pluginConfigs: { CommandPlugin } } = require('../../../../package.json')
 export default class ColorCommand extends AbstractCommand<'color'> {
   public static Name = 'color';
 
+  public get guildId() {
+    return CommandPlugin.hotlineGuildId;
+  }
+
   public get schema() {
     return {
-      guild:       CommandPlugin.hotlineGuildId,
       name:        ColorCommand.Name,
       description: 'Update your color',
       options:     [
