@@ -49,7 +49,7 @@ export default class Plugin extends AbstractPlugin {
       await Promise.all(Object.values(commands).map((x) => x.register()));
     });
 
-    this.client.on('unknown', async (packet) => {
+    this.client.on('rawWS', async (packet) => {
       if (packet.t !== 'INTERACTION_CREATE') {
         return;
       }
