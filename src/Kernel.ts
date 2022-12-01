@@ -144,7 +144,7 @@ export default class Kernel {
         const {value: {token}} = await this.secrets.getSecret<{token: string}>('hotline/discord');
         this.container.bind<string>(Types.discord.token).toConstantValue(token);
         this.container.bind<ClientOptions>(Types.discord.options).toConstantValue(
-          {intents: 32509},
+          {intents: 1 | 2},
         );
         this.container.bind<Client>(Types.discord.client).toDynamicValue((ctx) => {
             return new Client(
